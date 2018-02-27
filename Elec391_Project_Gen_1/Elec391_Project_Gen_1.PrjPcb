@@ -175,40 +175,6 @@ GenerateClassCluster=0
 DocumentUniqueId=YDNGAQWO
 
 [Document9]
-DocumentPath=Header.PcbLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=BBTQMJLU
-
-[Document10]
-DocumentPath=Header.SchLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=KJPKODDV
-
-[Document11]
 DocumentPath=Power.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -225,8 +191,8 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=EFGTIHOQ
 
-[Document12]
-DocumentPath=Elec391_Sch.SchLib
+[Document10]
+DocumentPath=5 pole commutator.PcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -240,9 +206,13 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=ROAQDCSY
+DocumentUniqueId=JGKJMDQG
 
 [GeneratedDocument1]
+DocumentPath=Project Outputs for Elec391_Project_Gen_1\Design Rule Check - 5 pole commutator.html
+DItemRevisionGUID=
+
+[GeneratedDocument2]
 DocumentPath=Project Outputs for Elec391_Project_Gen_1\Design Rule Check - MainPCB.html
 DItemRevisionGUID=
 
