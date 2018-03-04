@@ -13,7 +13,7 @@ void setup() {
   digitalWrite(direcPin, HIGH); 
   digitalWrite(direc2Pin, LOW); 
   analogWrite(motorPin, 255); 
-  delay(2000); 
+  delay(5000); 
   attachInterrupt(digitalPinToInterrupt(encoderPin), store_encoder_data, FALLING);  
   runTime[0] = micros(); 
 }

@@ -1,12 +1,12 @@
 #define direcPin A1
 #define direc2Pin A2 
-#define ARRAY_SIZE 750 
+#define ARRAY_SIZE 3000 
 
 unsigned int runTime[ARRAY_SIZE];
 unsigned int interruptCount = 1; 
 
 int encoderPin = 3; 
-int motorPin = 5;  
+int motorPin = 9;  
 
 void setup() {
   Serial.begin(9600); 
