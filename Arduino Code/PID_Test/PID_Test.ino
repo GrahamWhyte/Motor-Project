@@ -144,6 +144,7 @@ void setup() {
 
   // Configure ISR for encoder
   attachInterrupt(digitalPinToInterrupt(red_encoderPin), red_encoder_ISR, FALLING); 
+
 }
 
 void loop() {
