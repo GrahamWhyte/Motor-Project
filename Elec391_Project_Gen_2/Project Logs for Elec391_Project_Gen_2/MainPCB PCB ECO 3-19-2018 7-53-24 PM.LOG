@@ -1,0 +1,4 @@
+Added Component: Designator=S1(SPST-2_LGE1.0)
+Added Pin To Net: NetName=RESET Pin=S1-1
+Added Pin To Net: NetName=GND Pin=S1-2
+Added Class: Name=Top Level

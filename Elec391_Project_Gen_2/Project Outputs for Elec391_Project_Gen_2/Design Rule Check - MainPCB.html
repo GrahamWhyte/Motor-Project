@@ -1,0 +1,506 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html">
+<style type="text/css">
+		h1, h2, h3, h4, h5, h6 {
+			font-family : segoe ui;
+			color : black;
+			background-color : #EDE7D9;
+			padding: 0.3em;
+		}
+
+		h1 {
+			font-size: 1.2em;
+		}		
+
+		h2 {
+			font-size: 1.2em;
+		}
+
+		body {
+			font-family : segoe ui;
+		}
+
+		td, th {
+			padding: 0.5em;
+			text-align : left;
+			width: 10em;
+		}
+		th {
+			background-color : #EEEEEE;
+
+		}
+		th.column1, td.column1 {
+			text-align: left;
+			width : auto;
+		}
+		table {
+			width : 100%;
+			font-size: 0.9em;
+		}
+
+		.DRC_summary_header {
+			padding-bottom : 0.1em;
+			border : 0px solid black;
+			width: 100%;
+			align: left;
+		}
+
+		.DRC_summary_header_col1,
+		.DRC_summary_header_col2, 
+		.DRC_summary_header_col3 {
+			color : black;
+			font-size:100%;
+			padding : 0em;
+			padding-top : 0.2em;
+			padding-bottom 0.2em;
+			border : 0px solid black;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.DRC_summary_header_col1 {
+			font-weight: bold;
+			width: 8em;
+		}
+
+		.DRC_summary_header_col2 {
+			width: 0.1em;
+		
+		}
+
+		.DRC_summary_header_col3 {
+			width : auto;
+		}
+
+		.header_holder {
+		    Width = 100%;
+		    border = 0px solid green;
+		    padding = 0;
+		}
+
+
+		.front_matter, .front_matter_column1, .front_matter_column2, .front_matter_column3
+		{
+			left : 0;
+			top : 0;
+			padding: 0em;
+			padding-top : 0.1em;
+			border : 0px solid black;
+			width : 100%;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.front_matter_column1 {
+			width : 8em;
+			font-weight: bold;
+		}
+
+		.front_matter_column2 {
+			width: 0.1em;
+		}
+
+		.front_matter_column3 {
+			width : auto;
+		}
+
+		.total_column1, .total_column {
+			font-weight : bold;
+		}
+		.total_column1 {
+			text-align : left;
+		}
+		.warning, .error {
+			color : red;
+			font-weight : bold;
+		}
+		tr.onmouseout_odd {
+			background-color : #white;
+		}
+		tr.onmouseout_even { 
+			background-color : #FAFAFA;
+		}
+		tr.onmouseover_odd, tr.onmouseover_even { 
+			background-color : #EEEEEE;
+		} 
+		a:link, a:visited, .q a:link,.q a:active,.q {
+			color: #21489e; 
+		}
+		a:link.callback, a:visited.callback { 
+			color: #21489e;
+		}
+		a:link.customize, a:visited.customize {
+			color: #C0C0C0;
+			position: absolute; 
+			right: 10px;
+		}	
+		p.contents_level1 {
+			font-weight : bold;
+			font-size : 110%;
+			margin : 0.5em;
+		}
+		p.contents_level2 {
+			position : relative;
+			left : 20px;
+			margin : 0.5em;
+		}
+	</style><script type="text/javascript">
+		function coordToMils(coord) {
+			var number = coord / 10000;
+			
+			if (number != number.toFixed(3))
+				number = number.toFixed(3);
+
+			return number + 'mil'
+		}
+
+		function coordToMM(coord) {
+			var number = 0.0254 * coord / 10000;
+			
+			if (number != number.toFixed(4))
+				number = number.toFixed(4);
+			
+			return number + 'mm'
+		}
+	
+		function convertCoord(coordNode, units) {
+			for (var i = 0; i < coordNode.childNodes.length; i++) {
+				coordNode.removeChild(coordNode.childNodes[i]);
+			}
+
+			var coord = coordNode.getAttribute('value');
+			if (coord != null) {
+				if (units == 'mm') {
+					textNode = document.createTextNode(coordToMM(coord));
+					coordNode.appendChild(textNode);
+				} else if (units == 'mil') {
+					textNode = document.createTextNode(coordToMils(coord));		
+					coordNode.appendChild(textNode);	
+				}
+			}
+		}
+	
+		function convertUnits(unitNode, units) {
+			for (var i = 0; i < unitNode.childNodes.length; i++) {
+				unitNode.removeChild(unitNode.childNodes[i]);		
+			}
+		
+			textNode = document.createTextNode(units); 
+			unitNode.appendChild(textNode);
+		}
+	
+		function changeUnits(radio_input, units) {
+			if (radio_input.checked) {
+			
+				var elements = document.getElementsByName('coordinate');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertCoord(elements[i], units);
+					}
+				}
+	
+				var elements = document.getElementsByName('units');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertUnits(elements[i], units);
+					}
+				}
+			}
+		}
+	</script><title>Design Rule Verification Report</title>
+</head>
+<body onload=""><img ALT="Altium" src="
+			file://C:\Users\Public\Documents\Altium\AD16\Templates\AD_logo.png
+		"><h1>Design Rule Verification Report</h1>
+<table class="header_holder">
+<td class="column1">
+<table class="front_matter">
+<tr class="front_matter">
+<td class="front_matter_column1">Date:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">3/24/2018</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">12:38:46 PM</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Elapsed Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">00:00:02</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Filename:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3"><a href="file:///C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc" class="file"><acronym title="C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc">C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc</acronym></a></td>
+</tr>
+</table>
+</td>
+<td class="column2">
+<table class="DRC_summary_header">
+<tr>
+<td class="DRC_summary_header_col1">Warnings:</td>
+<td class="DRC_summary_header_col2"></td>
+<td class="DRC_summary_header_col3">0</td></tr>
+<tr>
+<td class="DRC_summary_header_col1">Rule Violations:</td>
+<td class="DRC_summary_header_col2"></td>
+<td class="DRC_summary_header_col3" style="color : red">18</td></tr>
+</table>
+</td>
+</table><a name="IDKVGFJOF2AX2ENB2KMMLCVWS4SFP3WUTZCJUJLDGUUN1NGKQQZV0P"><h2>Summary</h2></a><table>
+<tr>
+<th class="column1">Warnings</th>
+<th class="column2">Count</th>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">0</td>
+</tr>
+</table><br><table>
+<tr>
+<th class="column1">Rule Violations</th>
+<th class="column2">Count</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDNRORZSRV1C0MKMW5P25WM0THZCC0YDI0ZJUMQVLXMLJCBZWI3NJM">Clearance Constraint (Gap=7mil) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#ID3DLOQP4GNW4ID4ZFGJO0NWA4HEYE4ENAUZCBHNMNXGXOHBD25N">Width Constraint (Min=7mil) (Max=500mil) (Preferred=10mil) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDRA5CEFUBGG2FKMZXHI2IH4SMOXGSQWIZEDTMTMF1JD1VB3KLKLD">Power Plane Connect Rule(Relief Connect )(Expansion=20mil) (Conductor Width=10mil) (Air Gap=10mil) (Entries=4) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDEYGZGHQLZES2DFQ3YPJVWUN32IBZXA4S4CXE2IMTIW11PXRMRWGJ">Short-Circuit Constraint (Allowed=No) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#ID04ENVDN042V5NI1RKBT45ZBJBFMV0HQGQ5GHCQIAUOG4ALTQWV3J">Un-Routed Net Constraint ( (All) )</a></td>
+<td class="column2">1</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDPLVFFQU5BCQCBILO0ZUWZHXIKPIGLZEWU2KCW1PW1W4YH2HTKBAE">Minimum Annular Ring (Minimum=5mil) (IsVia)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDE41HJNNXA5T4KVPUUZ1JOFZXLD0PKVKCHA52CGBW5M31AK5OE5IK">Minimum Annular Ring (Minimum=7mil) (All)</a></td>
+<td class="column2">4</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDIY31PAU1MF2YOSLBVPWPJU15UAYFJZ2N4RDXDLRA2ZUDBN5EQ1P">Hole Size Constraint (Min=0mil) (Max=0mil) ((PadIsPlated = 'False') AND ((HoleDiameter &lt; PadXSize_AllLayers ) OR (HoleDiameter &lt; PadYSize_AllLayers)))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDVU3Q4IZQADKJEWGCTR0W3DUACOBPUCCUXKSLY3P5AR1DJAGLQWOC">Hole Size Constraint (Min=0mil) (Max=0mil) ((PadIsPlated = 'True') And ((HoleDiameter &gt;= PadXSize_AllLayers ) OR (HoleDiameter &gt;= PadYSize_AllLayers)))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDNYZSBOX4Q01FGZGFCYDCAMV3RISW2GDFM0ILZZNLUJ3J2XRUVWOL">Hole Size Constraint (Min=20mil) (Max=20mil) (HoleSize = 20 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#ID1Z5HFQLTC5A5GIC3KORM4SKV0CPSIWQIJCSDJ1MNV3M3OKIZ2FYP">Hole Size Constraint (Min=17mil) (Max=17mil) (HoleSize = 17 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDMRIJ2YVN142SHBOJSHCS1BYXNJC2EBQMNSHHQEE1BACVHBVFT1RD">Hole Size Constraint (Min=28mil) (Max=28mil) (HoleSize = 28 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDNRHUC1AZGRYUNZTXAYVPN4MVEOICEMLZATSO35KSIM1KW50J5T4J">Hole Size Constraint (Min=25mil) (Max=25mil) (HoleSize = 25 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDPLG5FNJETQC1K4XI0BOWMECWHEQDMGRRUY1XT4HKHOJYO35X2G5G">Hole Size Constraint (Min=35mil) (Max=35mil) (HoleSize = 35 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDSOQN5QOSI1W4ILEN2CCMROKUPECHQXXMSYBLY4HG3UDVAJDHO0G">Hole Size Constraint (Min=32mil) (Max=32mil) (HoleSize = 32 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDARRB402RQIBRKFWU2FIO5YWGUC343ZNRJJWFWHGOSPYUDNPL2AYD">Hole Size Constraint (Min=38mil) (Max=38mil) (HoleSize = 38 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDQWRTBH2DKJIYN0NZJ1D0TIOD4GXH32XHJW5C13ORRFMPSJHOQ0BH">Hole Size Constraint (Min=35mil) (Max=35mil) (HoleSize = 35 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#ID22RVYGU1HGJ0RZ150YRA1GHDGIYIGXEIQUFPWNXTMBE0JI2ZFRH">Hole Size Constraint (Min=42mil) (Max=42mil) (HoleSize = 42 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDMMUDQVI3V1JSGAMM5SZ1YOMDUOA4AMWOK33C0P3A1XJZKNBAURF">Hole Size Constraint (Min=39mil) (Max=39mil) (HoleSize = 39 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDOQMQ1FWMU50JP4JD21FA0NEDZHETGRUD52AN00HFEE4JGIQ2TXSE">Hole Size Constraint (Min=52mil) (Max=52mil) (HoleSize = 52 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDKRMYGKGM3PLLCTV3Y32PKHXQTIKUTZBZNTQLZFHTMVVMDNLINPHE">Hole Size Constraint (Min=49mil) (Max=49mil) (HoleSize = 49 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#ID14JYGFZ5PPKOIQCQJ4GBUNE2QI4NEYF0G5TT0LNX3Y5FC1QDXHPO">Hole Size Constraint (Min=60mil) (Max=60mil) (HoleSize = 60 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDDY4YRFT2SHIQHE4EKCMC5XZW0O2SHR0PTGJATZFAPZ2EUGJ22TAC">Hole Size Constraint (Min=57mil) (Max=57mil) (HoleSize = 57 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDLITAUCCCEESXD10F5HH4AST3CE2Q04G01QAMTVJURQ2IKGZ2FVQF">Hole Size Constraint (Min=86mil) (Max=86mil) (HoleSize = 86 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDSGW5FSYIAWS4GDKNXN22SQXTYGG3USLIV45EIOKZQN2YI4BDTHSE">Hole Size Constraint (Min=83mil) (Max=83mil) (HoleSize = 83 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDVDDUPHI5SKHSJ3PB2PBQUZWR2J0BIT1ZXNPABVH5CLHQODYZEAUL">Hole Size Constraint (Min=125mil) (Max=125mil) (HoleSize = 125 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#ID0WTEM0VEDOAJMNPFNQNXLRNSHD2UYIP4DQMCXEGJEZ5GQ51CIRJF">Hole Size Constraint (Min=122mil) (Max=122mil) (HoleSize = 122 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDME1E2J4KLAABNUC1WLYTWKCQSDUUXGFOSSXF42PXNIZGYXDHHB5E">Hole Size Constraint (Min=152mil) (Max=152mil) (HoleSize = 152 AND NOT(PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDON3DXLDWU5I3D42HYITQR1MLHD4IQ3FKZOZH3PPZKCOCO3PKLQSP">Hole Size Constraint (Min=149mil) (Max=149mil) (HoleSize = 149 AND PadIsPlated)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#ID5BTPJIAARU3HE3QOXIL5E1JWACGIPJBQYTCMYXW3FTKU2TGWCFP">Hole Size Constraint (Min=0mil) (Max=0mil) (HoleSize &lt;&gt; ((20 OR 28 OR 35 OR 38 OR 42 OR 52 OR 60 OR 86 OR 125 OR 152) AND NOT(PadIsPlated)))</a></td>
+<td class="column2">13</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDBLVCJS3EUGFDDKPKHOPISRV4QKGEH5YJYK21I1OGKOHGPS4WFFHH">Hole Size Constraint (Min=0mil) (Max=0mil) (HoleSize &lt;&gt; ((17 OR 25 OR 32 OR 35 OR 39 OR 49 OR 57 OR 83 OR 122 OR 149) AND PadIsPlated))</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDYYR1HWAGZJGLJOC3GM2IVE4D4PN50DFD4KOLLEYAJ1MZRUQLT0">Hole Size Constraint (Min=1mil) (Max=152mil) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDOH5OAXWTXV3KO0SFFTR5HFU4NNZZYYID2MEOG5KOIWH15KPK1WVF">Height Constraint (Min=0mil) (Max=2000mil) (Prefered=500mil) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDTZY3J2NNMKRXHRURDEFNBOKBLPSOGA2JXWVNK5PCCPN4WX0FWKCJ">Hole To Hole Clearance (Gap=10mil) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDBVCBI2NFBEZKJR2OGRXC3I3M2H1WSN1RPOY5HHJOLN0AC2IR33YP">Minimum Solder Mask Sliver (Gap=5mil) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDYQ5DXHPPRYKGEPRIGMANFX5JLLAFYQU50OZ3IO05L2CR045KKLC">Silk To Solder Mask (Clearance=5mil) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDDUNPB0FUIZPTLHFR4URE32TKPJ0G2AZ3UNX10GJ0EAQDTWCLWC5P">Silk To Solder Mask (Clearance=10mil) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDPRDMXJRX5FRJE3OGGNF5IVLJVIPBQLB1IBQBF3DCTPZZVXZOZIGK">Silk To Solder Mask (Clearance=10mil) (IsPad),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDIVKJ4SI0R0JJOGYT3V3AHKV4LW0V3NTJAA5UVH5NTAOTJVXYOL">Silk to Silk (Clearance=0mil) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDYQTZ5Z0R3D15B2KD5MUVRA2BLZZVLN20HSSF2FV34DKAJNTHY4">Net Antennae (Tolerance=0mil) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDNJ4NCGI4DRR5BRTZOTSUHXOUJDQB4EVQDSLIFODB2SFPYWACFN">Modified Polygon (Allow modified: No), (Allow shelved: No)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDSYYHNG2EUEX4EJ2YXZVIMIWIKD14QAPVJ3WEGNBWGUXC42V3WPPK">Board Clearance Constraint (Gap=0mil) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">18</td>
+</tr>
+</table><br><a name="ID04ENVDN042V5NI1RKBT45ZBJBFMV0HQGQ5GHCQIAUOG4ALTQWV3J"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Un-Routed Net Constraint ( (All) )</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3396.787mil|Location2.X=3553.213mil|Location1.Y=1860.567mil|Location2.Y=2339.433mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3396.787mil|Location2.X=3553.213mil|Location1.Y=1860.567mil|Location2.Y=2339.433mil|Absolute=True">Un-Routed Net Constraint: Net 5V Between Pad C4-2(2450mil,750mil) on Multi-Layer And Pad R1-2(2500mil,1150mil) on Multi-Layer </acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="IDE41HJNNXA5T4KVPUUZ1JOFZXLD0PKVKCHA52CGBW5M31AK5OE5IK"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Minimum Annular Ring (Minimum=7mil) (All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1120.875mil|Location2.X=1129.125mil|Location1.Y=1351.625mil|Location2.Y=1359.875mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1120.875mil|Location2.X=1129.125mil|Location1.Y=1351.625mil|Location2.Y=1359.875mil|Absolute=True">Minimum Annular Ring: (3.5mil &lt; 7mil) Pad Free-8(125mil,125mil) on Multi-Layer (Annular Ring=3.5mil) On (Top Layer)</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5620.875mil|Location2.X=5629.125mil|Location1.Y=1351.625mil|Location2.Y=1359.875mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5620.875mil|Location2.X=5629.125mil|Location1.Y=1351.625mil|Location2.Y=1359.875mil|Absolute=True">Minimum Annular Ring: (3.5mil &lt; 7mil) Pad Free-7(4625mil,125mil) on Multi-Layer (Annular Ring=3.5mil) On (Top Layer)</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5620.875mil|Location2.X=5629.125mil|Location1.Y=3876.625mil|Location2.Y=3884.875mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5620.875mil|Location2.X=5629.125mil|Location1.Y=3876.625mil|Location2.Y=3884.875mil|Absolute=True">Minimum Annular Ring: (3.5mil &lt; 7mil) Pad Free-6(4625mil,2650mil) on Multi-Layer (Annular Ring=3.5mil) On (Top Layer)</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1120.875mil|Location2.X=1129.125mil|Location1.Y=3876.625mil|Location2.Y=3884.875mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1120.875mil|Location2.X=1129.125mil|Location1.Y=3876.625mil|Location2.Y=3884.875mil|Absolute=True">Minimum Annular Ring: (3.5mil &lt; 7mil) Pad Free-5(125mil,2650mil) on Multi-Layer (Annular Ring=3.5mil) On (Top Layer)</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="ID5BTPJIAARU3HE3QOXIL5E1JWACGIPJBQYTCMYXW3FTKU2TGWCFP"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Hole Size Constraint (Min=0mil) (Max=0mil) (HoleSize &lt;&gt; ((20 OR 28 OR 35 OR 38 OR 42 OR 52 OR 60 OR 86 OR 125 OR 152) AND NOT(PadIsPlated)))</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1045.375mil|Location2.X=1204.625mil|Location1.Y=1195.375mil|Location2.Y=1354.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1045.375mil|Location2.X=1204.625mil|Location1.Y=1195.375mil|Location2.Y=1354.625mil|Absolute=True">Hole Size Constraint: (158mil &gt; 0mil) Pad Free-8(125mil,125mil) on Multi-Layer Actual Hole Size = 158mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5545.375mil|Location2.X=5704.625mil|Location1.Y=1195.375mil|Location2.Y=1354.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5545.375mil|Location2.X=5704.625mil|Location1.Y=1195.375mil|Location2.Y=1354.625mil|Absolute=True">Hole Size Constraint: (158mil &gt; 0mil) Pad Free-7(4625mil,125mil) on Multi-Layer Actual Hole Size = 158mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5545.375mil|Location2.X=5704.625mil|Location1.Y=3720.375mil|Location2.Y=3879.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=5545.375mil|Location2.X=5704.625mil|Location1.Y=3720.375mil|Location2.Y=3879.625mil|Absolute=True">Hole Size Constraint: (158mil &gt; 0mil) Pad Free-6(4625mil,2650mil) on Multi-Layer Actual Hole Size = 158mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1045.375mil|Location2.X=1204.625mil|Location1.Y=3720.375mil|Location2.Y=3879.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1045.375mil|Location2.X=1204.625mil|Location1.Y=3720.375mil|Location2.Y=3879.625mil|Absolute=True">Hole Size Constraint: (158mil &gt; 0mil) Pad Free-5(125mil,2650mil) on Multi-Layer Actual Hole Size = 158mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1189.139mil|Location2.X=1253.381mil|Location1.Y=2740.713mil|Location2.Y=2804.955mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1189.139mil|Location2.X=1253.381mil|Location1.Y=2740.713mil|Location2.Y=2804.955mil|Absolute=True">Hole Size Constraint: (62.992mil &gt; 0mil) Pad P5-5(221.26mil,1622.834mil) on Multi-Layer Actual Hole Size = 62.992mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2545.832mil|Location2.Y=2645.508mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2545.832mil|Location2.Y=2645.508mil|Absolute=True">Hole Size Constraint: (39.37mil &gt; 0mil) Pad P5-4(300mil,1445.67mil) on Multi-Layer Actual Rectangular Hole Height = 39.37mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2545.832mil|Location2.Y=2645.508mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2545.832mil|Location2.Y=2645.508mil|Absolute=True">Hole Size Constraint: (98.425mil &gt; 0mil) Pad P5-4(300mil,1445.67mil) on Multi-Layer Actual Rectangular Hole Width = 98.425mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2900.162mil|Location2.Y=2999.838mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2900.162mil|Location2.Y=2999.838mil|Absolute=True">Hole Size Constraint: (39.37mil &gt; 0mil) Pad P5-3(300mil,1800mil) on Multi-Layer Actual Rectangular Hole Height = 39.37mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2900.162mil|Location2.Y=2999.838mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1250.162mil|Location2.X=1349.838mil|Location1.Y=2900.162mil|Location2.Y=2999.838mil|Absolute=True">Hole Size Constraint: (98.425mil &gt; 0mil) Pad P5-3(300mil,1800mil) on Multi-Layer Actual Rectangular Hole Width = 98.425mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1293.469mil|Location2.X=1385.271mil|Location1.Y=2726.933mil|Location2.Y=2818.735mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1293.469mil|Location2.X=1385.271mil|Location1.Y=2726.933mil|Location2.Y=2818.735mil|Absolute=True">Hole Size Constraint: (39.37mil &gt; 0mil) Pad P5-2(339.37mil,1622.834mil) on Multi-Layer Actual Rectangular Hole Height = 39.37mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1293.469mil|Location2.X=1385.271mil|Location1.Y=2726.933mil|Location2.Y=2818.735mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1293.469mil|Location2.X=1385.271mil|Location1.Y=2726.933mil|Location2.Y=2818.735mil|Absolute=True">Hole Size Constraint: (90.551mil &gt; 0mil) Pad P5-2(339.37mil,1622.834mil) on Multi-Layer Actual Rectangular Hole Width = 90.551mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1515.91mil|Location2.X=1635.27mil|Location1.Y=2713.154mil|Location2.Y=2832.514mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1515.91mil|Location2.X=1635.27mil|Location1.Y=2713.154mil|Location2.Y=2832.514mil|Absolute=True">Hole Size Constraint: (39.37mil &gt; 0mil) Pad P5-1(575.59mil,1622.834mil) on Multi-Layer Actual Rectangular Hole Height = 39.37mil</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1515.91mil|Location2.X=1635.27mil|Location1.Y=2713.154mil|Location2.Y=2832.514mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\Graham\Documents\GitHub\Elec391\Motor-Project\Elec391_Project_Gen_2\MainPCB.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1515.91mil|Location2.X=1635.27mil|Location1.Y=2713.154mil|Location2.Y=2832.514mil|Absolute=True">Hole Size Constraint: (118.11mil &gt; 0mil) Pad P5-1(575.59mil,1622.834mil) on Multi-Layer Actual Rectangular Hole Width = 118.11mil</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br></body>
+</html>

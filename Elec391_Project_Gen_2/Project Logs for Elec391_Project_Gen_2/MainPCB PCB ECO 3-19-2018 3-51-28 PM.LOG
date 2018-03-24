@@ -1,0 +1,6 @@
+Added Component: Designator=P5(PJ-063AH)
+Added Component: Designator=P6(TERM-BLOCK-5.08MM-2POS)
+Added Pin To Net: NetName=VS Pin=P6-1
+Added Pin To Net: NetName=GND Pin=P6-2
+Added Member To Class: ClassName=Power Supply Member=Component P5 PJ-063AH
+Added Member To Class: ClassName=Power Supply Member=Component P6 Term-Block 2

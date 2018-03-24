@@ -1,0 +1,4 @@
+Added Component: Designator=P7(HDR1X2_LGE1.0)
+Added Pin To Net: NetName=SDA Pin=P7-1
+Added Pin To Net: NetName=SCL Pin=P7-2
+Added Member To Class: ClassName=Slot Detectors Member=Component P7 C-Hdr1x2

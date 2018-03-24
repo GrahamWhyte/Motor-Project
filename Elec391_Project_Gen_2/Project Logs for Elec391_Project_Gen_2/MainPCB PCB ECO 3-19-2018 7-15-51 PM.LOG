@@ -1,0 +1,16 @@
+Removed Pin From Net: NetName=VS Pin=Q1-4
+Removed Pin From Net: NetName=VS Pin=Q2-4
+Removed Member From Class: ClassName=Slot Detectors Member=P3
+Added Component: Designator=F1(PIN-W2/E2.8)
+Added Component: Designator=F2(PIN-W2/E2.8)
+Added Pin To Net: NetName=VS Pin=F1-1
+Added Pin To Net: NetName=VS Pin=F2-1
+Added Pin To Net: NetName=NetF1_2 Pin=F1-2
+Added Pin To Net: NetName=NetF1_2 Pin=Q1-4
+Added Net: Name=NetF1_2
+Added Pin To Net: NetName=NetF2_2 Pin=F2-2
+Added Pin To Net: NetName=NetF2_2 Pin=Q2-4
+Added Net: Name=NetF2_2
+Added Member To Class: ClassName=Current Driver 1 Member=Component F1 Fuse 2
+Added Member To Class: ClassName=Current Driver 2 Member=Component F2 Fuse 2
+Added Member To Class: ClassName=Slot Detectors Member=Component P2 C-Hdr1x4
