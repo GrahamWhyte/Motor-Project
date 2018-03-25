@@ -61,6 +61,8 @@ int motorPin_laser = 9;
 int encoderPin_laser = 3;
 int encoderPin2_laser = 18;
 
+int homingPin_laser = 21; 
+
 // Initial displacement
 int displacement_laser = 0;
 
@@ -90,6 +92,8 @@ int encoderPin_mirror = 2;
 int encoderPin2_mirror = 8;
 //int encoderPin2_mirror = 19;        // Will change on new PCB
 
+int homingPin_mirror = 22; 
+
 // Initial displacement
 int displacement_mirror = 0;
 
@@ -108,18 +112,24 @@ void setup() {
   // Open serial port
   Serial.begin(9600);
 
+  Serial.println("Starting Homing"); 
+  
+  // Homing
+  homing(); 
+  Serial.println("Finished Homing"); 
+
   // Test: Read Triangle Data
 //  populate_setpoint_arrays(); 
 
-  setpointArray_laser = setpoint_laser_triangle; 
+//  setpointArray_laser = setpoint_laser_triangle; 
 
   // Configure Timer 1. PID values will be updated every time this timer interrupts
-  Timer1.initialize(controlTime_us);             // Interrupt time in us
-  Timer1.attachInterrupt(update_pid);
-
-  // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
-  Timer3.initialize(convert_to_micro_seconds(1));             // Enter time in seconds, will be converted 
-  Timer3.attachInterrupt(update_setpoint);
+//  Timer1.initialize(controlTime_us);             // Interrupt time in us
+//  Timer1.attachInterrupt(update_pid);
+//
+//  // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
+//  Timer3.initialize(convert_to_micro_seconds(1));             // Enter time in seconds, will be converted 
+//  Timer3.attachInterrupt(update_setpoint);
 
 }
 
@@ -134,14 +144,32 @@ void populate_setpoint_arrays () {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.print(setpoint_laser);
-  Serial.print(","); 
-  Serial.println(setpoint_mirror);  
+//  Serial.print(setpoint_laser);
+//  Serial.print(","); 
+//  Serial.println(setpoint_mirror);  
 
 }
 
 int convert_to_micro_seconds (double value) {
   return (int)value*1E6; 
+}
+
+void homing() {
+
+  // Rotate until slot detector hits gap
+  while(!digitalRead(homingPin_laser)) {
+    analogWrite(motorPin_laser, 30);   
+    analogWrite(LASER_DIREC_2, 255);
+    analogWrite(LASER_DIREC_1, 0); 
+  }
+  analogWrite(motorPin_laser, 0);
+
+  while(!digitalRead(homingPin_mirror)) {
+    analogWrite(motorPin_mirror, 30);   
+    analogWrite(MIRROR_DIREC_2, 255);
+    analogWrite(MIRROR_DIREC_1, 0); 
+  }
+  analogWrite(motorPin_mirror, 0);
 }
 
 
