@@ -38,13 +38,13 @@ double calculate_PID (double kp, double ki, double kd, double input, double setp
 
   errorChange = (derivativeError - *lastError)/controlTime_s;                // Difference between error and lastError for derivative term 
 
-  derivativeFiltered = errorChange*FILTER_COEF/(errorChange + FILTER_COEF);         // Apply low pass filter to derivative term
+//  derivativeFiltered = errorChange*FILTER_COEF/(errorChange + FILTER_COEF);         // Apply low pass filter to derivative term
 
   // Calculate PID values. If error term has saturated, do not use it. 
   if (saturationFlag)
-    pid_val = kp*error + kd*derivativeFiltered;                                  // Do not use Ki term if we are saturating
+    pid_val = kp*error + kd*errorChange;                                  // Do not use Ki term if we are saturating
   else
-    pid_val = kp*error + ki*errorTotal_laser + kd*derivativeFiltered;       
+    pid_val = kp*error + ki*errorTotal_laser + kd*errorChange;       
 
   double output = constrain(pid_val, -SUPPLY_VOLTAGE, SUPPLY_VOLTAGE);                       // Constrain to a value within the power supply 
 
@@ -76,8 +76,8 @@ void PWM_out(double pidVal, int motorPin, int direcPin1, int direcPin2) {
 }
 
 void update_setpoint() {
-  setpoint_laser = setpointArray_laser[setpointIndex]; 
-  setpoint_mirror = setpointArray_mirror[setpointIndex]; 
+  setpoint_laser = setpointArray_laser[setpointIndex]*DEG_TO_RAD; 
+  setpoint_mirror = setpointArray_mirror[setpointIndex]*DEG_TO_RAD; 
 
   if (setpointIndex >= SETPOINT_ARRAY_SIZE-1)
     setpointIndex = 0; 

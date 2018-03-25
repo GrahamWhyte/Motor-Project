@@ -8,7 +8,6 @@
 #define MIRROR_DIREC_1  A4
 
 #define INTERRUPT_TO_RAD  0.0628
-#define DEG_TO_RAD        0.01745329
 #define SUPPLY_VOLTAGE    12
 #define ANGLE_MAX         1.047197        // Approx. 60 degrees 
 #define ANGLE_MIN         -1.047197       // Approx. -60 degrees 
@@ -24,9 +23,9 @@ double controlTime_s = controlTime_us/1E6;  // PID update time in s
 int setpointIndex = 0; 
 
 // Arrays of setpoints for each shape. Will be overwritten every time the shape changes 
-//int setpointArray_laser [SETPOINT_ARRAY_SIZE]; 
+int setpointArray_laser [SETPOINT_ARRAY_SIZE]; 
 int setpointArray_mirror [SETPOINT_ARRAY_SIZE]; 
-int *setpointArray_laser; 
+//int *setpointArray_laser; 
 
 // Setpoint Arrays
 
@@ -89,8 +88,8 @@ double kd_laser = 0.10;
 // Digital Pins
 int motorPin_mirror = 7;
 int encoderPin_mirror = 2;
-int encoderPin2_mirror = 8;
-//int encoderPin2_mirror = 19;        // Will change on new PCB
+//int encoderPin2_mirror = 8;
+int encoderPin2_mirror = 19;        // Will change on new PCB
 
 int homingPin_mirror = 22; 
 
@@ -102,34 +101,39 @@ double errorTotal_mirror = 0, lastError_mirror = 0, lastSetpoint_mirror = 0;
 
 double input_mirror = 0, output_mirror = 0, setpoint_mirror= 0;
 
-// PID constants have not been found yet. Maybe if Jake and Eric BUILD THE FUCKING MOTOR
-double kp_mirror = 1;
-double ki_mirror = 0; 
-double kd_mirror = 0; 
+double kp_mirror = 1.5;
+double ki_mirror = 2.5; 
+double kd_mirror = 0.1; 
 
 void setup() {
 
   // Open serial port
   Serial.begin(9600);
-
-  Serial.println("Starting Homing"); 
   
   // Homing
   homing(); 
-  Serial.println("Finished Homing"); 
 
   // Test: Read Triangle Data
 //  populate_setpoint_arrays(); 
 
-//  setpointArray_laser = setpoint_laser_triangle; 
-
   // Configure Timer 1. PID values will be updated every time this timer interrupts
-//  Timer1.initialize(controlTime_us);             // Interrupt time in us
-//  Timer1.attachInterrupt(update_pid);
-//
-//  // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
-//  Timer3.initialize(convert_to_micro_seconds(1));             // Enter time in seconds, will be converted 
-//  Timer3.attachInterrupt(update_setpoint);
+  Timer1.initialize(controlTime_us);             // Interrupt time in us
+  Timer1.attachInterrupt(update_pid);
+
+  // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
+  Timer3.initialize(convert_to_micro_seconds(1));             // Enter time in seconds, will be converted 
+  Timer3.attachInterrupt(update_setpoint);
+
+  // Configure pins for Mirror motor
+  pinMode(motorPin_mirror, OUTPUT);
+  pinMode(encoderPin_mirror, INPUT);
+  pinMode(encoderPin2_mirror, INPUT);
+  pinMode(MIRROR_DIREC_1, OUTPUT);
+  pinMode(MIRROR_DIREC_2, OUTPUT);
+  
+  // Configure ISR for mirror motor encoder slots
+  attachInterrupt(digitalPinToInterrupt(encoderPin_mirror), mirror_encoder_ISR_1, FALLING);
+  attachInterrupt(digitalPinToInterrupt(encoderPin2_mirror), mirror_encoder_ISR_2, FALLING);
 
 }
 
@@ -144,14 +148,14 @@ void populate_setpoint_arrays () {
 
 void loop() {
   // put your main code here, to run repeatedly:
-//  Serial.print(setpoint_laser);
-//  Serial.print(","); 
-//  Serial.println(setpoint_mirror);  
+  Serial.print(input_mirror);
+  Serial.print(","); 
+  Serial.println(setpoint_mirror);  
 
 }
 
 int convert_to_micro_seconds (double value) {
-  return (int)value*1E6; 
+  return value*1E6; 
 }
 
 void homing() {
