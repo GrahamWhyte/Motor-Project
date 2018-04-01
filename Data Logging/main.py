@@ -2,7 +2,7 @@ import serial
 import struct
 import serial.tools.list_ports
 
-outputFile = 'Encoder Data.txt'
+outputFile = 'White 11V Forward.txt'
 intSignal = 'i'
 finishSignal = 'f'
 dataList = []
@@ -26,17 +26,17 @@ Main function
 """
 port = 0
 
-while (True):
-    port = find_com_port()
-    if port == 0:
-        print('Cannot open COM port')
-    else:
-        print(port)
-        break
+# while (True):
+#     port = find_com_port()
+    # if port == 0:
+    #     print('Cannot open COM port')
+    # else:
+    #     print(port)
+    #     break
 
-port = find_com_port()
+# port = find_com_port()
 ser = serial.Serial()
-ser.port = str(port)
+ser.port = 'COM3'
 ser.baudrate = 9600
 ser.open()
 
@@ -52,8 +52,9 @@ Wait for start signal from arduino
 
 while(True):
     test = ser.read().decode("utf-8")
-    print(test)
+    # print(test)
     if test == finishSignal:
+        print("Done")
         break
     elif test == intSignal:
         bytes = ser.read(2)
