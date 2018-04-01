@@ -7,18 +7,24 @@
 ******************************/
 void laser_encoder_ISR_1() {
 
-  // If the other signal is high on the falling edge of the first signal, we are going backwards
-  if (digitalRead(encoderPin2_laser)) {
-    displacement_laser--;
+  // Rising Edge 
+  if (digitalRead(encoderPin_laser)){
+    if (digitalRead(encoderPin2_laser))
+      displacement_laser++;  
+    else 
+      displacement_laser--; 
   }
 
-  // Otherwise, we go forwards
-  else {
-    displacement_laser++;
+  // Falling Edge
+   if (!digitalRead(encoderPin_laser)){
+    if (digitalRead(encoderPin2_laser))
+      displacement_laser--; 
+    else 
+      displacement_laser++; 
   }
 
   // Convert the displacement (in interrupts) to radians
-  input_laser = displacement_laser * INTERRUPT_TO_RAD;
+  input_laser = displacement_laser * INTERRUPT_TO_DEG;
 }
 
 /**************************
@@ -30,18 +36,21 @@ void laser_encoder_ISR_1() {
 ******************************/
 void laser_encoder_ISR_2() {
 
-  // If the other signal is high on the falling edge of the first signal, we are going forwards
-  if (digitalRead(encoderPin_laser)) {
-    displacement_laser++;
+  // Rising Edge 
+  if (digitalRead(encoderPin2_laser)){
+    if (digitalRead(encoderPin_laser))
+      displacement_laser--;  
+    else 
+      displacement_laser++; 
   }
 
-  // Otherwise, we go backwards
-  else {
-    displacement_laser--;
+  // Falling Edge
+   if (!digitalRead(encoderPin2_laser)){
+    if (digitalRead(encoderPin_laser))
+      displacement_laser++; 
+    else 
+      displacement_laser--; 
   }
-
-  // Convert the displacement (in interrupts) to radians
-  input_laser = displacement_laser * INTERRUPT_TO_RAD;
 }
 
 /**************************
@@ -53,18 +62,22 @@ void laser_encoder_ISR_2() {
 ******************************/
 void mirror_encoder_ISR_1() {
 
-  // If the other signal is high on the falling edge of the first signal, we are going backwards
-  if (digitalRead(encoderPin2_mirror)) {
-    displacement_mirror--;
+  // Rising Edge 
+  if (digitalRead(encoderPin_mirror)){
+    if (digitalRead(encoderPin2_mirror))
+      displacement_mirror--;  
+    else 
+      displacement_mirror++; 
   }
 
-  // Otherwise, we go forwards
-  else {
-    displacement_mirror++;
+  // Falling Edge
+   if (!digitalRead(encoderPin_mirror)){
+    if (digitalRead(encoderPin2_mirror))
+      displacement_mirror++; 
+    else 
+      displacement_mirror--; 
   }
-
-  // Convert the displacement (in interrupts) to radians
-  input_mirror = displacement_mirror * INTERRUPT_TO_RAD;
+  input_mirror = displacement_mirror * INTERRUPT_TO_DEG;
 }
 
 /**************************
@@ -76,18 +89,24 @@ void mirror_encoder_ISR_1() {
 ******************************/
 void mirror_encoder_ISR_2() {
 
-  // If the other signal is high on the falling edge of the first signal, we are going forwards
-  if (digitalRead(encoderPin_mirror)) {
-    displacement_mirror++;
+  // Rising Edge 
+  if (digitalRead(encoderPin2_mirror)){
+    if (digitalRead(encoderPin_mirror))
+      displacement_mirror++;  
+    else 
+      displacement_mirror--; 
   }
 
-  // Otherwise, we go backwards
-  else {
-    displacement_mirror--;
+  // Falling Edge
+   if (!digitalRead(encoderPin2_mirror)){
+    if (digitalRead(encoderPin_mirror))
+      displacement_mirror--; 
+    else 
+      displacement_mirror++; 
   }
 
   // Convert the displacement (in interrupts) to radians
-  input_mirror = displacement_mirror * INTERRUPT_TO_RAD;
+  input_mirror = displacement_mirror * INTERRUPT_TO_DEG;
 }
 
 

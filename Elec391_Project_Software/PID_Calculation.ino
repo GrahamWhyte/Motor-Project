@@ -1,28 +1,39 @@
+void timer_one_ISR() {
+  t1Flag = true; 
+}
+
 /***********************************
 * Updates PID values for both motors at an interval specified by controlTime_us 
 */
 
 void update_pid() {
 
-  output_laser = calculate_PID(kp_laser, ki_laser, kd_laser, input_laser, setpoint_laser, &errorTotal_laser, &lastError_laser, &lastSetpoint_laser);
-  output_mirror = calculate_PID(kp_mirror, ki_mirror, kd_mirror, input_mirror, setpoint_mirror, &errorTotal_mirror, &lastError_mirror, &lastSetpoint_mirror);
+//  digitalWrite(13, LOW); 
+  t1Flag = false; 
+  
+  output_laser = calculate_PID(kp_laser, ki_laser, kd_laser, input_laser, setpoint_laser, &errorTotal_laser, &lastError_laser, &lastSetpoint_laser, &lastTime_laser);
+  output_mirror = calculate_PID(kp_mirror, ki_mirror, kd_mirror, input_mirror, setpoint_mirror, &errorTotal_mirror, &lastError_mirror, &lastSetpoint_mirror, &lastTime_mirror);
 
   PWM_out(output_laser, motorPin_laser, LASER_DIREC_1, LASER_DIREC_2); 
   PWM_out(output_mirror, motorPin_mirror, MIRROR_DIREC_1, MIRROR_DIREC_2); 
-  
+
+//  digitalWrite(13, HIGH); 
 }
 
 
-double calculate_PID (double kp, double ki, double kd, double input, double setpoint, double *errorTotal, double *lastError, double *lastSetpoint) {
+double calculate_PID (double kp, double ki, double kd, double input, double setpoint, double *errorTotal, double *lastError, double *lastSetpoint, double *lastTime) {
   
-  double error, derivativeError, errorChange, derivativeFiltered, pid_val, motor_out; 
+  double error, derivativeError, errorChange, derivativeFiltered, pid_val, motor_out, currentTime, timeChange; 
   bool saturationFlag = 0;
-
+//
+  currentTime = micros()/1E6; 
+  timeChange = currentTime - *lastTime; 
+//  
   // P Control
   error = setpoint - input;                 // Calculate Error Term
 
   // I Control
-  *errorTotal += error*controlTime_s;         // Calculate total error for integral term scaled by the change in time since last interrupt                    
+  *errorTotal += error*timeChange;         // Calculate total error for integral term scaled by the change in time since last interrupt                    
 
   // Prevent integral windup from getting out of control. If saturationFlag is high, the I term will be ignored in the PID calculation
   if (*errorTotal > 255 || *errorTotal < -255)
@@ -36,20 +47,23 @@ double calculate_PID (double kp, double ki, double kd, double input, double setp
   else
     derivativeError = error;          
 
-  errorChange = (derivativeError - *lastError)/controlTime_s;                // Difference between error and lastError for derivative term 
+  errorChange = (derivativeError - *lastError)/timeChange;                // Difference between error and lastError for derivative term 
 
-//  derivativeFiltered = errorChange*FILTER_COEF/(errorChange + FILTER_COEF);         // Apply low pass filter to derivative term
+  derivativeFiltered = errorChange*FILTER_COEF/(errorChange + FILTER_COEF);         // Apply low pass filter to derivative term
 
   // Calculate PID values. If error term has saturated, do not use it. 
   if (saturationFlag)
-    pid_val = kp*error + kd*errorChange;                                  // Do not use Ki term if we are saturating
+    pid_val = kp*error + kd*derivativeFiltered;                                  // Do not use Ki term if we are saturating
   else
-    pid_val = kp*error + ki*errorTotal_laser + kd*errorChange;       
+    pid_val = kp*error + ki*(*errorTotal) + kd*derivativeFiltered;       
 
   double output = constrain(pid_val, -SUPPLY_VOLTAGE, SUPPLY_VOLTAGE);                       // Constrain to a value within the power supply 
 
+//  output_buffer[]
+  
   *lastError = error; 
   *lastSetpoint = setpoint; 
+  *lastTime = currentTime; 
   
   return output; 
 }
@@ -76,12 +90,34 @@ void PWM_out(double pidVal, int motorPin, int direcPin1, int direcPin2) {
 }
 
 void update_setpoint() {
-  setpoint_laser = setpointArray_laser[setpointIndex]*DEG_TO_RAD; 
-  setpoint_mirror = setpointArray_mirror[setpointIndex]*DEG_TO_RAD; 
+  setpoint_laser = setpointArray_laser[setpointIndex]; 
+  setpoint_mirror = setpointArray_mirror[setpointIndex]; 
+
+//  if (setpointDir){
+//    if (setpointIndex >= SETPOINT_ARRAY_SIZE-1){
+//        setpointDir = false; 
+//        setpointIndex--; 
+//    }
+//    else
+//      setpointIndex++; 
+//  }
+//  
+//  if (!setpointDir) {
+//    if (setpointIndex <= 0) {
+//        setpointDir = true; 
+//        setpointIndex++; 
+//    }
+//    else 
+//      setpointIndex--; 
+//  }
+
 
   if (setpointIndex >= SETPOINT_ARRAY_SIZE-1)
     setpointIndex = 0; 
   else
     setpointIndex++; 
 }
+
+
+
 
