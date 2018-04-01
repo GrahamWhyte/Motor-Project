@@ -23,15 +23,13 @@ void setup() {
 void loop() {
 
   if (~motorOffFlag){
-    digitalWrite(direcPin, HIGH); 
-    digitalWrite(direc2Pin, LOW); 
+    analogWrite(direcPin, 255); 
+    analogWrite(direc2Pin, 0); 
     analogWrite(motorPin, 255); 
   }
-
-  Serial.println(interruptCount); 
   
   if (interruptCount >= ARRAY_SIZE-1) {
-    motorOffFlag = 0; 
+    motorOffFlag = 1; 
     detachInterrupt(digitalPinToInterrupt(encoderPin)); 
     analogWrite(motorPin, 0); 
     digitalWrite(direcPin, LOW); 
