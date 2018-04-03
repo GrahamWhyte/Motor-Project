@@ -14,7 +14,7 @@ void update_pid() {
   output_laser = calculate_PID(kp_laser, ki_laser, kd_laser, input_laser, setpoint_laser, &errorTotal_laser, &lastError_laser, &lastSetpoint_laser, &lastTime_laser);
   output_mirror = calculate_PID(kp_mirror, ki_mirror, kd_mirror, input_mirror, setpoint_mirror, &errorTotal_mirror, &lastError_mirror, &lastSetpoint_mirror, &lastTime_mirror);
 
-  PWM_out(output_laser, motorPin_laser, LASER_DIREC_1, LASER_DIREC_2); 
+//  PWM_out(output_laser, motorPin_laser, LASER_DIREC_1, LASER_DIREC_2); 
   PWM_out(output_mirror, motorPin_mirror, MIRROR_DIREC_1, MIRROR_DIREC_2); 
 
 //  digitalWrite(13, HIGH); 
@@ -89,33 +89,62 @@ void PWM_out(double pidVal, int motorPin, int direcPin1, int direcPin2) {
   
 }
 
+//void update_setpoint() {
+//  setpoint_laser = setpointArray_laser[setpointIndex]; 
+//  setpoint_mirror = setpointArray_mirror[setpointIndex]; 
+//
+////  if (setpointDir){
+////    if (setpointIndex >= SETPOINT_ARRAY_SIZE-1){
+////        setpointDir = false; 
+////        setpointIndex--; 
+////    }
+////    else
+////      setpointIndex++; 
+////  }
+////  
+////  if (!setpointDir) {
+////    if (setpointIndex<= 0) {
+////        setpointDir= true; 
+////        setpointIndex++; 
+////    }
+////    else 
+////      setpointIndex--; 
+////  }
+//
+////
+//  if (setpointIndex >= SETPOINT_ARRAY_SIZE-1)
+//    setpointIndex = 0; 
+//  else
+//    setpointIndex++; 
+//}
+
 void update_setpoint() {
   setpoint_laser = setpointArray_laser[setpointIndex]; 
   setpoint_mirror = setpointArray_mirror[setpointIndex]; 
 
-//  if (setpointDir){
-//    if (setpointIndex >= SETPOINT_ARRAY_SIZE-1){
-//        setpointDir = false; 
-//        setpointIndex--; 
-//    }
-//    else
-//      setpointIndex++; 
+//  if (setpointArray_laser[setpointIndex+1] == TERMINATION_VAL || setpointArray_mirror[setpointIndex+1] == TERMINATION_VAL) {
+//    setpoint_laser = setpointArray_laser[setpointIndex]; 
+//    setpoint_mirror = setpointArray_mirror[setpointIndex]; 
+//    setpointDir = false; 
 //  }
-//  
-//  if (!setpointDir) {
-//    if (setpointIndex <= 0) {
-//        setpointDir = true; 
-//        setpointIndex++; 
-//    }
-//    else 
-//      setpointIndex--; 
+//
+//  if (setpointIndex == 0) {
+//    setpoint_laser = setpointArray_laser[setpointIndex]; 
+//    setpoint_mirror = setpointArray_mirror[setpointIndex]; 
+//    setpointDir = true; 
+//  }
+//
+//  if (setpointDir) {
+//    setpointIndex++; 
+//  }
+//  else {
+//    setpointIndex--; 
 //  }
 
-
-  if (setpointIndex >= SETPOINT_ARRAY_SIZE-1)
+  if (setpointArray_laser[setpointIndex+1]== TERMINATION_VAL || setpointArray_laser[setpointIndex+2]== TERMINATION_VAL)
     setpointIndex = 0; 
   else
-    setpointIndex++; 
+    setpointIndex+=2; 
 }
 
 

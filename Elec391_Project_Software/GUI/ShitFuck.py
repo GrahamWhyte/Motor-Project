@@ -24,14 +24,21 @@ class App(Frame):
     def __init__(self, master):
         Frame.__init__(self)
 
-        master.geometry('1200x1200+200+100')
+        master.geometry('1500x700+200+100')
         master.title('Motor Thingymaboop')
-        master.state('zoomed')
+        # master.state('zoomed')
         master.config(background = '#fafafa')
 
+        self.xData = []
+        self.yData = []
 
         matplotlib.style.use('ggplot')
-        self.fig = plt.figure(figsize=(20, 10), dpi=100)
+        self.fig = plt.figure(figsize=(14, 4.5), dpi=100)
+        self.ax1 = self.fig.add_subplot(1, 1, 1)
+        self.ax1.set_ylim(-15, 15)
+        self.ax1.set_xlim(-15, 15)
+        self.line, = self.ax1.plot(self.xData, self.yData, 'r', marker='o')
+
 
 
         self.canvas = FigureCanvasTkAgg(self.fig, root)
@@ -44,11 +51,7 @@ class App(Frame):
 
         self.circleButton.grid()
 
-        self.squareButton = Button(root,
-                                   text="Square",
-                                   command=self.send_square)
-
-        self.squareButton.grid()
+        # self.circleButton_window = self.canvas.create_window(250, 250, anchor=SE, window=self.circleButton)
 
         self.x_queue = queue.Queue()
         self.y_queue = queue.Queue()
@@ -59,17 +62,6 @@ class App(Frame):
         )
         self.thread.start()
 
-        # self.update_plot()
-        self.set_up_plot()
-
-    def set_up_plot(self):
-
-        self.xData = []
-        self.yData = []
-        self.ax1 = self.fig.add_subplot(1, 1, 1)
-        self.ax1.set_ylim(-25, 25)
-        self.ax1.set_xlim(-25, 25)
-        self.line, = self.ax1.plot(self.xData, self.yData, 'r')
         self.update_plot()
 
     def update_plot(self):
@@ -77,46 +69,20 @@ class App(Frame):
         def animate(i):
             # self.yData.append(random.randint(0, 50))
             if (~self.x_queue.empty()):
-                mirrorAngle = self.y_queue.get()*np.pi/180
-                laserAngle = self.x_queue.get()*np.pi/180
+                yValue = self.y_queue.get()*np.pi/180
+                xValue = self.x_queue.get()*np.pi/180
 
-                yValue = np.tan(mirrorAngle)*10
-                xValue= np.tan(2*laserAngle - np.pi/2)*10
+                self.yData.append(np.tan(yValue)*10)
+                self.xData.append(np.tan(2*xValue-np.pi/2)*10)
+                self.line.set_data(self.xData, self.yData)
+                # self.ax1.set_xlim(0, i+1)
 
-                if (abs(xValue)<100):
-                    self.yData.append(yValue)
-                    self.xData.append(xValue)
-                    self.line.set_data(self.xData, self.yData)
-                #     # self.ax1.set_xlim(0, i+1)
-
-
-        ani = animation.FuncAnimation(self.fig, animate, interval=1, blit=False)
+        ani = animation.FuncAnimation(self.fig, animate, interval=10, blit=False)
         self.canvas.draw()
 
     def send_circle(self):
-        # ser.write('c'.encode('ascii'))
-        ser.write(b'\x63')
-        # ser.close()
-        plt.cla()
-        self.set_up_plot()
+        print('c')
 
-    def send_square(self):
-        ser.write('s'.encode())
-        print('s'.encode)
-        plt.cla()
-        self.set_up_plot()
-
-    def send_triangle(self):
-        ser.write('t'.encode())
-        print('t'.encode())
-        plt.cla()
-        self.set_up_plot()
-
-    def send_line(self):
-        ser.write('l'.encode())
-        print('l'.encode())
-        plt.cla()
-        self.set_up_plot()
 
 ser = serial.Serial(
     port="COM5",
@@ -126,12 +92,12 @@ ser = serial.Serial(
 )
 ser.close()
 ser.open()
-time.sleep(3)
+time.sleep(1)
+
 
 root = Tk()
 
 App(root)
 
 root.mainloop()
-
 
