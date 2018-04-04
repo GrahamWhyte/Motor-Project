@@ -40,12 +40,12 @@ double calculate_PID (double kp, double ki, double kd, double input, double setp
     saturationFlag = 1; 
   else
     saturationFlag = 0; 
-
-  // D control
-  if (setpoint != *lastSetpoint)         // Handle derivative kick by not using the error if the setpoint changed
-    derivativeError = -input; 
-  else
-    derivativeError = error;          
+//
+//  // D control
+//  if (setpoint != *lastSetpoint)         // Handle derivative kick by not using the error if the setpoint changed
+//    derivativeError = -input; 
+//  else
+  derivativeError = error;          
 
   errorChange = (derivativeError - *lastError)/timeChange;                // Difference between error and lastError for derivative term 
 

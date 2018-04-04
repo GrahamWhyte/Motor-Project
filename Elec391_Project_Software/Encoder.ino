@@ -65,17 +65,17 @@ void mirror_encoder_ISR_1() {
   // Rising Edge 
   if (digitalRead(encoderPin_mirror)){
     if (digitalRead(encoderPin2_mirror))
-      displacement_mirror--;  
+      displacement_mirror++;  
     else 
-      displacement_mirror++; 
+      displacement_mirror--; 
   }
 
   // Falling Edge
    if (!digitalRead(encoderPin_mirror)){
     if (digitalRead(encoderPin2_mirror))
-      displacement_mirror++; 
-    else 
       displacement_mirror--; 
+    else 
+      displacement_mirror++; 
   }
   input_mirror = displacement_mirror * INTERRUPT_TO_DEG;
 }
@@ -92,17 +92,17 @@ void mirror_encoder_ISR_2() {
   // Rising Edge 
   if (digitalRead(encoderPin2_mirror)){
     if (digitalRead(encoderPin_mirror))
-      displacement_mirror++;  
+      displacement_mirror--;  
     else 
-      displacement_mirror--; 
+      displacement_mirror++; 
   }
 
   // Falling Edge
    if (!digitalRead(encoderPin2_mirror)){
     if (digitalRead(encoderPin_mirror))
-      displacement_mirror--; 
-    else 
       displacement_mirror++; 
+    else 
+      displacement_mirror--; 
   }
 
   // Convert the displacement (in interrupts) to radians

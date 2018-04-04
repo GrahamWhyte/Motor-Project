@@ -7,7 +7,6 @@
 #define MIRROR_DIREC_2  A3
 #define MIRROR_DIREC_1  A4
 
-#define INTERRUPT_TO_RAD  0.0628
 #define INTERRUPT_TO_DEG  0.9
 #define SUPPLY_VOLTAGE    14
 #define ANGLE_MAX         1.047197        // Approx. 60 degrees 
@@ -17,6 +16,12 @@
 #define FILTER_COEF         4007
 #define SETPOINT_ARRAY_SIZE 101
 #define TERMINATION_VAL -1000
+
+struct fuck_you_matt{
+  char preset; 
+  int len; 
+  byte data[400]; 
+};
 
 //const int LASER_ARRAY_SIZE = 27; 
 //const int MIRROR_ARRAY_SIZE = 1; 
@@ -51,25 +56,25 @@ char lineSignal = 'l';
 //                                                               10.8, 7.2, 3.6, 0, -3.6, -7.2, -10.8, -14.4, -18, -21.6,
 //                                                               -25.2, -28.8, -32.4, -36, -39.6, -43.2, -46.8, TERMINATION_VAL}; 
 //
-//const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {25.2, 21.6, 18, 14.4, 
-//                                                               10.8, 7.2, 3.6, 0, -3.6, -7.2, -10.8, -14.4, -18, -21.6,
-//                                                               -25.2, TERMINATION_VAL}; 
-//const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {61.2, 61.2, 61.2, 61.2,
-//                                                                  61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2,
-//                                                                  61.2, TERMINATION_VAL}; 
+const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {25.2, 21.6, 18, 14.4, 
+                                                               10.8, 7.2, 3.6, 0, -3.6, -7.2, -10.8, -14.4, -18, -21.6,
+                                                               -25.2, TERMINATION_VAL}; 
+const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {61.2, 61.2, 61.2, 61.2,
+                                                                  61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2,
+                                                                  61.2, TERMINATION_VAL}; 
 
-
-const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                                                                  0, 0, 0, 0,
-                                                                  TERMINATION_VAL}; 
+//
+//const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+//                                                                  0, 0, 0, 0,
+//                                                                  TERMINATION_VAL}; 
                                                                   
 //const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {46.8, 43.2, 39.6, 36, 32.4, 28.8, 25.2, 21.6, 18, 14.4, 
 //                                                                   10.8, 7.2, 3.6, 0, -3.6, -7.2, -10.8, -14.4, -18, -21.6,
 //                                                                   -25.2, -28.8, -32.4, -36, -39.6, -43.2, -46.8, TERMINATION_VAL}; 
 
-const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {21.6, 25.2, 28.8, 32.4, 36, 39.6, 43.2, 46.8, 50.4, 54, 
-                                                                    57.6, 61.2, 64.8, 68.4, 
-                                                                    TERMINATION_VAL}; 
+//const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {21.6, 25.2, 28.8, 32.4, 36, 39.6, 43.2, 46.8, 50.4, 54, 
+//                                                                    57.6, 61.2, 64.8, 68.4, 
+//                                                                    TERMINATION_VAL}; 
                                                                    
 //
 
@@ -92,8 +97,14 @@ const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {21.6, 25.2, 2
 
 
 
-const double setpoint_laser_square [SETPOINT_ARRAY_SIZE] PROGMEM = {0,18,18,18,0,-18,-18,-18,0, TERMINATION_VAL}; 
-const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,43.2,50.4,57.6,57.6,57.6,50.4,43.2,43.2, TERMINATION_VAL};
+const double setpoint_laser_square [SETPOINT_ARRAY_SIZE] PROGMEM = {0,18,18,18,
+                                                                    0,-18,-18,-18,
+                                                                   TERMINATION_VAL}; 
+const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,43.2,52.4,57.6,
+                                                                     57.6,57.6,52.4,43.2,
+                                                                      TERMINATION_VAL};
+
+                                               
 
 
 //const double setpoint_laser_square [SETPOINT_ARRAY_SIZE] PROGMEM = {18,14.4,10.8,7.2,3.6,0,-3.6,-7.2,-10.8,-14.4,-18,-18,
@@ -106,31 +117,34 @@ const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,43.2,5
 //                                                                     50.4,46.8,43.2,39.6,36,32.4, TERMINATION_VAL}; 
 
 //// Triangle
-const double setpoint_laser_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {
-                                                                    -27,-26,-25,-24,-23,-22,-21,-20,-19,-18,
-                                                                    -17,-16,-15,-14,-13,-12,-11,-10,-8,-7,
-                                                                    -6,-5,-4,-3,-2,0,2,3,4,5,
-                                                                     6,7,8,10,11,12,13,14,15,16,
-                                                                     17,18,19,20,21,22,23,24,25,26,
-                                                                     27,26,25,24,23,22,21,20,19,18,
-                                                                     17,16,15,14,13,12,11,10,8,7,
-                                                                     6,5,4,3,2,-1,-2,-3,-4,-5,
-                                                                     -6,-7,-8,-10,-11,-12,-13,-14,-15,-16,
-                                                                     -17,-18,-19,-20,-21,-22,-23,-24,-25,-26, TERMINATION_VAL
-                                                                   };                                                             
+//const double setpoint_laser_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {
+//                                                                    -27,-26,-25,-24,-23,-22,-21,-20,-19,-18,
+//                                                                    -17,-16,-15,-14,-13,-12,-11,-10,-8,-7,
+//                                                                    -6,-5,-4,-3,-2,0,2,3,4,5,
+//                                                                     6,7,8,10,11,12,13,14,15,16,
+//                                                                     17,18,19,20,21,22,23,24,25,26,
+//                                                                     27,26,25,24,23,22,21,20,19,18,
+//                                                                     17,16,15,14,13,12,11,10,8,7,
+//                                                                     6,5,4,3,2,-1,-2,-3,-4,-5,
+//                                                                     -6,-7,-8,-10,-11,-12,-13,-14,-15,-16,
+//                                                                     -17,-18,-19,-20,-21,-22,-23,-24,-25,-26, TERMINATION_VAL
+//                                                                   };            
 
-const double setpoint_mirror_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {
-                                                                      46,47,48,49,50,51,52,53,54,55,
-                                                                      56,57,58,59,60,61,62,63,63,64,
-                                                                      65,66,66,67,67,68,67,67,66,66,
-                                                                      65,64,63,63,62,61,60,59,58,57,
-                                                                      56,55,54,53,52,51,50,49,48,47,
-                                                                      46,46,46,46,46,46,46,46,46,46,
-                                                                      46,46,46,46,46,46,46,46,46,46,
-                                                                      46,46,46,46,46,46,46,46,46,46,
-                                                                      46,46,46,46,46,46,46,46,46,46,
-                                                                      46,46,46,46,46,46,46,46,46,46,TERMINATION_VAL
-                                                                    }; 
+const double setpoint_laser_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {0,3.6,7.2,10.8,7.2,3.6,0,-3.6,-7.2,-10.8,-7.2,-3.6,TERMINATION_VAL}; 
+const double setpoint_mirror_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,43.2,43.2,43.2,46.8,50.4,54,50.4,46.8,43.2,43.2,43.2,TERMINATION_VAL};                                                                                                                     
+
+//const double setpoint_mirror_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {
+//                                                                      46,47,48,49,50,51,52,53,54,55,
+//                                                                      56,57,58,59,60,61,62,63,63,64,
+//                                                                      65,66,66,67,67,68,67,67,66,66,
+//                                                                      65,64,63,63,62,61,60,59,58,57,
+//                                                                      56,55,54,53,52,51,50,49,48,47,
+//                                                                      46,46,46,46,46,46,46,46,46,46,
+//                                                                      46,46,46,46,46,46,46,46,46,46,
+//                                                                      46,46,46,46,46,46,46,46,46,46,
+//                                                                      46,46,46,46,46,46,46,46,46,46,
+//                                                                      46,46,46,46,46,46,46,46,46,46,TERMINATION_VAL
+//                                                                    }; 
 
 
 
@@ -227,8 +241,8 @@ double input_mirror = 0, output_mirror = 0, setpoint_mirror= 0;
 //double ki_mirror = 0.19652; 
 //double kd_mirror = 0.2502; 
 
-double kp_mirror = 0.89618;
-double ki_mirror = 1.0035;
+double kp_mirror = 1;
+double ki_mirror = 1.3;
 double kd_mirror = 0.19066;
 
 void setup() {
@@ -256,7 +270,7 @@ void setup() {
   pinMode(MIRROR_DIREC_2, OUTPUT);
   pinMode(homingPin_mirror, INPUT); 
 
-
+//
 //  Serial.println("Homing Begin"); 
 //  homing(); 
 //  Serial.println("Homing Done"); 
@@ -268,10 +282,10 @@ void setup() {
   
   // Configure Timer 1. PID values will be updated every time this timer interrupts
   Timer1.initialize(controlTime_us);             // Interrupt time in us
-  Timer1.attachInterrupt(update_pid);
+  Timer1.attachInterrupt(timer_one_ISR);
 
   // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
-  Timer3.initialize(convert_to_micro_seconds(0.25));             // Enter time in seconds, will be converted 
+  Timer3.initialize(convert_to_micro_seconds(0.05));             // Enter time in seconds, will be converted 
   Timer3.attachInterrupt(update_setpoint);
 
 
@@ -296,20 +310,20 @@ void setup() {
 
 //char recievedChar = 'g'; 
 void loop() {
-//  if (Serial.available()>0) {
-//    readShape(); 
-//  }
+  if (Serial.available()>0) {
+    readShape(); 
+  }
   
   /*
    * Debugging serial prints 
    * Probably won't work when GUI is implemented
-   */
+//   */
 //  Serial.print(input_laser);
 //  Serial.print(","); 
 //  Serial.println(setpoint_laser);  
-  Serial.print(input_mirror);
-  Serial.print(", "); 
-  Serial.println(setpoint_mirror);
+//  Serial.print(input_mirror);
+//  Serial.print(", "); 
+//  Serial.println(setpoint_mirror);
 //  Serial.println(lastTime_laser); 
 //
 
@@ -317,8 +331,8 @@ void loop() {
 //  Serial.println(setpoint_mirror); 
 
 
-//  if (t1Flag) 
-//    update_pid(); 
+  if (t1Flag) 
+    update_pid(); 
 }
 
 long convert_to_micro_seconds (double value) {
@@ -329,32 +343,24 @@ long convert_to_micro_seconds (double value) {
 void homing() {
 
   // Rotate until slot detector hits gap
-
-  while(digitalRead(homingPin_laser)) {
-    analogWrite(motorPin_laser, 78);   
-    analogWrite(LASER_DIREC_2, 255);
-    analogWrite(LASER_DIREC_1, 0); 
-  }
-  while(digitalRead(homingPin_laser)) {
-    analogWrite(motorPin_laser, 78);   
-    analogWrite(LASER_DIREC_2, 255);
-    analogWrite(LASER_DIREC_1, 0); 
-  }
-  displacement_laser = 0;
-  analogWrite(motorPin_laser, 0);
-  Serial.println("Laser Motor Done"); 
-
   while(digitalRead(homingPin_mirror)) {
-    analogWrite(motorPin_mirror, 40);   
+    analogWrite(motorPin_mirror, 100);   
     analogWrite(MIRROR_DIREC_2, 255);
     analogWrite(MIRROR_DIREC_1, 0); 
   }
   analogWrite(motorPin_mirror, 0);
-
-
-  // Zero displacement at homing position for both motors
-
   displacement_mirror = 0; 
+
+  while(digitalRead(homingPin_laser)) {
+    analogWrite(motorPin_laser, 100);   
+    analogWrite(LASER_DIREC_2, 255);
+    analogWrite(LASER_DIREC_1, 0); 
+  }
+  
+  displacement_laser = 0;
+//  analogWrite(motorPin_laser, 0);
+//  Serial.println("Laser Motor Done"); 
+
 }
 
 void populate_setpoint_arrays (double *laser_shape, double *mirror_shape) {
@@ -363,12 +369,12 @@ void populate_setpoint_arrays (double *laser_shape, double *mirror_shape) {
     setpointArray_laser[i] = pgm_read_float(&laser_shape[i]);
     setpointArray_mirror[i] = pgm_read_float(&mirror_shape[i]);
 
-    if (setpointArray_laser[i] != TERMINATION_VAL){
-      Serial.write('m'); 
-      sendFloat(setpointArray_mirror[i]);  
-      Serial.write('l');
-      sendFloat(setpointArray_laser[i]);
-    }
+//    if (setpointArray_laser[i] != TERMINATION_VAL){
+//      Serial.write('m'); 
+//      sendFloat(setpointArray_mirror[i]);  
+//      Serial.write('l');
+//      sendFloat(setpointArray_laser[i]);
+//    }
   }  
 }
 
@@ -376,61 +382,78 @@ void populate_setpoint_arrays (double *laser_shape, double *mirror_shape) {
 void readShape() {
   double *laser_array;
   double *mirror_array;  
+  char shape; 
+  int len; 
 
-
-  char shape = Serial.read(); 
+//  char option = Serial.read(); 
+  char type = Serial.read(); 
+  len = (int)Serial.read(); 
   
-//  shape = 'c'; 
+  // Check if we're expecting float data 
+  if (type == 'A') {
 
-//  if (shape != 's') {
-//    laser_array = setpoint_laser_circle; 
-//    mirror_array = setpoint_mirror_circle; 
-//  }
-//
-//  else 
-//  {
-//    laser_array = setpoint_laser_square; 
-//    mirror_array = setpoint_mirror_square; 
-//  }
-//    
+    shape = Serial.read(); 
 
-  switch (shape) {
+      switch (shape) {
+      
+        case 'c': 
+          laser_array = setpoint_laser_circle; 
+          mirror_array = setpoint_mirror_circle; 
+          break; 
     
-    case 'c': 
-//      Serial.println("Circle"); 
-//      digitalWrite(13, HIGH); 
-//      delay(500); 
-      laser_array = setpoint_laser_circle; 
-      mirror_array = setpoint_mirror_circle; 
-      break; 
-
-    case 's':
-//      Serial.println("Square");
-      laser_array = setpoint_laser_square; 
-      mirror_array = setpoint_mirror_square; 
-      break; 
-
-    case 't':
-//      Serial.println("Triangle");
-      laser_array = setpoint_laser_triangle; 
-      mirror_array = setpoint_mirror_triangle; 
-      break; 
-
-    case 'l':
-//      Serial.println("Line");
-      laser_array = setpoint_laser_line; 
-      mirror_array = setpoint_mirror_line; 
-      break;
-
-    // Make sure nothing weird happens if an unexpected signal comes through
-    default: 
-      laser_array = laser_array; 
-      mirror_array = mirror_array; 
-      break; 
+        case 's':
+          laser_array = setpoint_laser_square; 
+          mirror_array = setpoint_mirror_square; 
+          break; 
+    
+        case 't':
+          laser_array = setpoint_laser_triangle; 
+          mirror_array = setpoint_mirror_triangle; 
+          break; 
+    
+        case 'l':
+          laser_array = setpoint_laser_line; 
+          mirror_array = setpoint_mirror_line; 
+          break;
+  
+      // Make sure nothing weird happens if an unexpected signal comes through
+      default: 
+        laser_array = laser_array; 
+        mirror_array = mirror_array; 
+        break; 
+  
+    }
+    populate_setpoint_arrays(laser_array, mirror_array); 
   }
 
-  populate_setpoint_arrays(laser_array, mirror_array); 
-  digitalWrite(13, LOW); 
+  if (type == 'B'){
+    int newSpeed = Serial.parseInt(); 
+    Timer3.setPeriod(convert_to_micro_seconds((float)newSpeed/100)); 
+  }
+
+  if (type == 'C'){
+    for (int i = 0; i < len; i++) {
+      int val1 = (int)Serial.read(); 
+      int val2 = (int)Serial.read(); 
+      int val3 = (int)Serial.read(); 
+
+      float val = val1 + val2 + (float)val3/10; 
+
+      setpointArray_laser[i] = val; 
+    }
+  }
+
+  if (type == 'D'){
+    for (int i = 0; i < len; i++) {
+      int val1 = (int)Serial.read(); 
+      int val2 = (int)Serial.read(); 
+      int val3 = (int)Serial.read(); 
+
+      float val = val1 + val2 + (float)val3/10; 
+
+      setpointArray_mirror[i] = val; 
+    }
+  }
 }
 
 

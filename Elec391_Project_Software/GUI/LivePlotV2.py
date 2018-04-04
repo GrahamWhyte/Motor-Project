@@ -16,45 +16,45 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
-def serialPort(x_queue = None, y_queue = None):
-    while (True):
-        if ser.in_waiting:
-            signal = ser.read()
-            # print(signal)
-            try:
-                if signal.decode() == 'm':
-                    bytes = ser.read(4)
-                    val = struct.unpack('<f', bytes)[0]
-                    y_queue.put(val)
-
-                if signal.decode() == 'l':
-                    bytes = ser.read(4)
-                    val = struct.unpack('<f', bytes)[0]
-                    x_queue.put(val)
-
-            except (AttributeError, UnicodeDecodeError):
-                pass
-
-        else:
-            pass
-
-
-
-def animate(i):
-    if (~x_queue.empty()):
-        mirrorAngle = y_queue.get()
-        laserAngle = x_queue.get()
-
-        yValue = np.tan(mirrorAngle)*10
-        xValue= np.tan(2*laserAngle - np.pi/2)*10
+# def serialPort(x_queue = None, y_queue = None):
+#     while (True):
+#         if ser.in_waiting:
+#             signal = ser.read()
+#             # print(signal)
+#             try:
+#                 if signal.decode() == 'm':
+#                     bytes = ser.read(4)
+#                     val = struct.unpack('<f', bytes)[0]
+#                     y_queue.put(val)
+#
+#                 if signal.decode() == 'l':
+#                     bytes = ser.read(4)
+#                     val = struct.unpack('<f', bytes)[0]
+#                     x_queue.put(val)
+#
+#             except (AttributeError, UnicodeDecodeError):
+#                 pass
+#
+#         else:
+#             pass
 
 
-        if abs(xValue) <100:
-            yData.append(mirrorAngle)
-            xData.append(laserAngle)
 
-    ax.clear()
-    ax.plot(xData, yData)
+# def animate(i):
+#     if (~x_queue.empty()):
+#         mirrorAngle = y_queue.get()
+#         laserAngle = x_queue.get()
+#
+#         yValue = np.tan(mirrorAngle)*10
+#         xValue= np.tan(2*laserAngle - np.pi/2)*10
+#
+#
+#         if abs(xValue) <100:
+#             yData.append(mirrorAngle)
+#             xData.append(laserAngle)
+#
+#     ax.clear()
+#     ax.plot(xData, yData)
 
 
 
@@ -81,35 +81,42 @@ class App(Tk):
         squareButton.pack()
 
 
+        triangleButton = ttk.Button(self,
+                                  text="Triangle",
+                                  command=self.send_triangle)
+
+        triangleButton.pack()
+
+
         # triangeButton = ttk.Button(self,
         #                           text="Triangle",
         #                           command=self.send_triangle())
         #
         # triangeButton.pack()
 
-        canvas = FigureCanvasTkAgg(fig, self)
-        canvas.show()
-        canvas.get_tk_widget().pack(side=BOTTOM, fill=BOTH, expand=True)
+        # canvas = FigureCanvasTkAgg(fig, self)
+        # canvas.show()
+        # canvas.get_tk_widget().pack(side=BOTTOM, fill=BOTH, expand=True)
 
     def send_circle(self):
         ser.write('c'.encode())
-        x_queue.queue.clear()
-        y_queue.queue.clear()
-        xData = []
-        yData = []
+        # x_queue.queue.clear()
+        # y_queue.queue.clear()
+        # xData = []
+        # yData = []
 
 
     def send_square(self):
         ser.write('s'.encode())
-        x_queue.queue.clear()
-        y_queue.queue.clear()
+        # x_queue.queue.clear()
+        # y_queue.queue.clear()
         xData = []
         yData = []
 
     def send_triangle(self):
         ser.write('t'.encode())
-        x_queue.queue.clear()
-        y_queue.queue.clear()
+        # x_queue.queue.clear()
+        # y_queue.queue.clear()
         xData = []
         yData = []
 
@@ -117,27 +124,27 @@ class App(Tk):
         ser.write('l'.encode())
 
 # Plotting stuff
-xData = []
-yData = []
-fig = plt.figure(figsize=(5, 5), dpi=100)
-ax = fig.add_subplot(111)
+# xData = []
+# yData = []
+# fig = plt.figure(figsize=(5, 5), dpi=100)
+# ax = fig.add_subplot(111)
 
 # Serial stuff
 ser = serial.Serial()
-ser.port = "COM5"
+ser.port = "COM3"
 ser.baudrate = 9600
 ser.open()
 
 # Threading stuff
-x_queue = queue.Queue()
-y_queue = queue.Queue()
-threadQueue = threading.Thread(
-    target = serialPort,
-    kwargs = {'x_queue': x_queue,
-              'y_queue': y_queue}
-)
-threadQueue.start()
+# x_queue = queue.Queue()
+# y_queue = queue.Queue()
+# threadQueue = threading.Thread(
+#     target = serialPort,
+#     kwargs = {'x_queue': x_queue,
+#               'y_queue': y_queue}
+# )
+# threadQueue.start()
 
 app = App()
-ani = animation.FuncAnimation(fig, animate, interval=10)
+# ani = animation.FuncAnimation(fig, animate, interval=10)
 app.mainloop()
