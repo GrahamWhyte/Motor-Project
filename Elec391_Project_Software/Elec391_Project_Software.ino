@@ -34,8 +34,8 @@ bool setpointDir= true;
 bool t1Flag = false; 
 
 // Arrays of setpoints for each shape. Will be overwritten every time the shape changes 
-double setpointArray_laser [SETPOINT_ARRAY_SIZE]; 
-double setpointArray_mirror [SETPOINT_ARRAY_SIZE]; 
+volatile double setpointArray_laser [SETPOINT_ARRAY_SIZE]; 
+volatile double setpointArray_mirror [SETPOINT_ARRAY_SIZE]; 
 
 // Character to recieve from Serial. Will determine which shape to draw
 char shapeSignal = ""; 
@@ -91,14 +91,19 @@ const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {21.6, 25.2, 2
 //const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {21.6, 46.8, 68.4, 68.4, 68.4, 46.8, 21.6, 21.6, 21.6, TERMINATION_VAL}; 
 
 
-const double setpoint_laser_square [SETPOINT_ARRAY_SIZE] PROGMEM = {18,14.4,10.8,7.2,3.6,0,-3.6,-7.2,-10.8,-14.4,-18,-18,
-                                                                    -18,-18,-18,-18,-18,-18,-18,-18,-14.4,-10.8,-7.2,-3.6,
-                                                                    0,3.6,7.2,10.8,14.4,18,18,18,18,18,18,18,18,18, TERMINATION_VAL}; 
-                                                                    
-const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,
-                                                                     32.4,32.4,36,39.6,43.2,46.8,50.4,54,57.6,57.6,57.6,
-                                                                     57.6,57.6,57.6,57.6,57.6,57.6,57.6,57.6,57.6,57.6,53,
-                                                                     50.4,46.8,43.2,39.6,36,32.4, TERMINATION_VAL}; 
+
+const double setpoint_laser_square [SETPOINT_ARRAY_SIZE] PROGMEM = {0,18,18,18,0,-18,-18,-18,0, TERMINATION_VAL}; 
+const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,43.2,50.4,57.6,57.6,57.6,50.4,43.2,43.2, TERMINATION_VAL};
+
+
+//const double setpoint_laser_square [SETPOINT_ARRAY_SIZE] PROGMEM = {18,14.4,10.8,7.2,3.6,0,-3.6,-7.2,-10.8,-14.4,-18,-18,
+//                                                                    -18,-18,-18,-18,-18,-18,-18,-18,-14.4,-10.8,-7.2,-3.6,
+//                                                                    0,3.6,7.2,10.8,14.4,18,18,18,18,18,18,18,18,18, TERMINATION_VAL}; 
+//                                                                    
+//const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,
+//                                                                     32.4,32.4,36,39.6,43.2,46.8,50.4,54,57.6,57.6,57.6,
+//                                                                     57.6,57.6,57.6,57.6,57.6,57.6,57.6,57.6,57.6,57.6,53,
+//                                                                     50.4,46.8,43.2,39.6,36,32.4, TERMINATION_VAL}; 
 
 //// Triangle
 const double setpoint_laser_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {
@@ -266,7 +271,7 @@ void setup() {
   Timer1.attachInterrupt(update_pid);
 
   // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
-  Timer3.initialize(convert_to_micro_seconds(0.01));             // Enter time in seconds, will be converted 
+  Timer3.initialize(convert_to_micro_seconds(0.25));             // Enter time in seconds, will be converted 
   Timer3.attachInterrupt(update_setpoint);
 
 
@@ -280,22 +285,20 @@ void setup() {
 
 
   
-  // Initially draw a triangle
+  // Initially draw a square
   populate_setpoint_arrays(setpoint_laser_square, setpoint_mirror_square); 
 //  readShape('t'); 
 
-//  delay(1); 
-
+  // Wait 500ms for shit to get not fucked
+  delay(500); 
 }
 
+
+//char recievedChar = 'g'; 
 void loop() {
 //  if (Serial.available()>0) {
-//    shapeSignal = (char)Serial.read();
-////    Serial.println(shapeSignal); 
-//    readShape(shapeSignal);
+//    readShape(); 
 //  }
-//  Serial.println(shapeSignal); 
-
   
   /*
    * Debugging serial prints 
@@ -309,8 +312,7 @@ void loop() {
   Serial.println(setpoint_mirror);
 //  Serial.println(lastTime_laser); 
 //
-//  sendFloat(setpoint_mirror);  
-//  sendFloat(setpoint_laser);
+
   
 //  Serial.println(setpoint_mirror); 
 
@@ -360,14 +362,24 @@ void populate_setpoint_arrays (double *laser_shape, double *mirror_shape) {
   for (int i = 0; i < SETPOINT_ARRAY_SIZE; i++) {
     setpointArray_laser[i] = pgm_read_float(&laser_shape[i]);
     setpointArray_mirror[i] = pgm_read_float(&mirror_shape[i]);
+
+    if (setpointArray_laser[i] != TERMINATION_VAL){
+      Serial.write('m'); 
+      sendFloat(setpointArray_mirror[i]);  
+      Serial.write('l');
+      sendFloat(setpointArray_laser[i]);
+    }
   }  
 }
 
 
-void readShape(char shape) {
+void readShape() {
   double *laser_array;
   double *mirror_array;  
 
+
+  char shape = Serial.read(); 
+  
 //  shape = 'c'; 
 
 //  if (shape != 's') {
@@ -385,21 +397,27 @@ void readShape(char shape) {
   switch (shape) {
     
     case 'c': 
+//      Serial.println("Circle"); 
+//      digitalWrite(13, HIGH); 
+//      delay(500); 
       laser_array = setpoint_laser_circle; 
       mirror_array = setpoint_mirror_circle; 
       break; 
 
     case 's':
+//      Serial.println("Square");
       laser_array = setpoint_laser_square; 
       mirror_array = setpoint_mirror_square; 
       break; 
 
     case 't':
+//      Serial.println("Triangle");
       laser_array = setpoint_laser_triangle; 
       mirror_array = setpoint_mirror_triangle; 
       break; 
 
     case 'l':
+//      Serial.println("Line");
       laser_array = setpoint_laser_line; 
       mirror_array = setpoint_mirror_line; 
       break;
@@ -412,6 +430,7 @@ void readShape(char shape) {
   }
 
   populate_setpoint_arrays(laser_array, mirror_array); 
+  digitalWrite(13, LOW); 
 }
 
 
@@ -422,7 +441,7 @@ void testMotor () {
     analogWrite(motorPin_laser, 150);   
     analogWrite(LASER_DIREC_2, 255);
     analogWrite(LASER_DIREC_1, 0); 
-    analogWrite(motorPin_mirror, 150); 
+    analogWrite(motorPin_mirror, 75); 
     analogWrite(MIRROR_DIREC_2, 255);
     analogWrite(MIRROR_DIREC_1, 0); 
   }
