@@ -9,6 +9,8 @@ import threading
 import serial
 import struct
 
+import sys
+
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
@@ -81,15 +83,24 @@ class App(Tk):
         squareButton.pack()
 
 
-        # triangeButton = ttk.Button(self,
-        #                           text="Triangle",
-        #                           command=self.send_triangle())
-        #
-        # triangeButton.pack()
+        triangeButton = ttk.Button(self,
+                                  text="Triangle",
+                                  command=self.send_triangle())
+
+        triangeButton.pack()
 
         canvas = FigureCanvasTkAgg(fig, self)
-        canvas.show()
+        # canvas.show()
+        canvas.draw()
         canvas.get_tk_widget().pack(side=BOTTOM, fill=BOTH, expand=True)
+
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+
+    # this should work but doesn't
+    def on_closing(self):
+        self.destroy()
+        sys.exit("Shitty exit")
 
     def send_circle(self):
         ser.write('c'.encode())
@@ -136,7 +147,8 @@ threadQueue = threading.Thread(
     kwargs = {'x_queue': x_queue,
               'y_queue': y_queue}
 )
-threadQueue.start()
+# threadQueue.start()
+# threadSerial = threading.Thread(target=read_serial_port)
 
 app = App()
 ani = animation.FuncAnimation(fig, animate, interval=10)
