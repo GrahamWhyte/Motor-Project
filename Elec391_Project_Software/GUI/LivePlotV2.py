@@ -9,6 +9,8 @@ import threading
 import serial
 import struct
 
+import sys
+
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
@@ -81,6 +83,7 @@ class App(Tk):
         squareButton.pack()
 
 
+<<<<<<< HEAD
         triangleButton = ttk.Button(self,
                                   text="Triangle",
                                   command=self.send_triangle)
@@ -97,6 +100,11 @@ class App(Tk):
         # canvas = FigureCanvasTkAgg(fig, self)
         # canvas.show()
         # canvas.get_tk_widget().pack(side=BOTTOM, fill=BOTH, expand=True)
+
+    # this should work but doesn't
+    def on_closing(self):
+        self.destroy()
+        sys.exit("Shitty exit")
 
     def send_circle(self):
         ser.write('c'.encode())
@@ -136,6 +144,7 @@ ser.baudrate = 9600
 ser.open()
 
 # Threading stuff
+<<<<<<< HEAD
 # x_queue = queue.Queue()
 # y_queue = queue.Queue()
 # threadQueue = threading.Thread(
@@ -144,6 +153,17 @@ ser.open()
 #               'y_queue': y_queue}
 # )
 # threadQueue.start()
+=======
+x_queue = queue.Queue()
+y_queue = queue.Queue()
+threadQueue = threading.Thread(
+    target = serialPort,
+    kwargs = {'x_queue': x_queue,
+              'y_queue': y_queue}
+)
+# threadQueue.start()
+# threadSerial = threading.Thread(target=read_serial_port)
+>>>>>>> 0b5667cfbea473ef0ee08fb67d1aeb112e554666
 
 app = App()
 # ani = animation.FuncAnimation(fig, animate, interval=10)
