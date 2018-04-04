@@ -9,16 +9,30 @@ import threading
 import serial
 import struct
 import time
+import msvcrt
 
-def serial_port(x_queue=None, y_queue=None):
+def serial_port(x_queue=None, y_queue=None, stopFlag = 0):
 
-    while (True):
-        bytes = ser.read(4)
-        val = struct.unpack('<f', bytes)[0]
-        x_queue.put(val)
-        bytes = ser.read(4)
-        val = struct.unpack('<f', bytes)[0]
-        y_queue.put(val)
+    if ~stopFlag:
+        while (True):
+            if ser.in_waiting:
+                signal = ser.read()
+                print(signal)
+                try:
+                    if signal.decode() == 'm':
+                        bytes = ser.read(4)
+                        val = struct.unpack('<f', bytes)[0]
+                        x_queue.put(val)
+
+                    if signal.decode() == 'l':
+                        bytes = ser.read(4)
+                        val = struct.unpack('<f', bytes)[0]
+                        y_queue.put(val)
+
+                except AttributeError:
+                    pass
+
+
 
 class App(Frame):
     def __init__(self, master):
@@ -64,12 +78,16 @@ class App(Frame):
 
     def set_up_plot(self):
 
+        self.y_queue.queue.clear()
+        self.x_queue.queue.clear()
+
         self.xData = []
         self.yData = []
         self.ax1 = self.fig.add_subplot(1, 1, 1)
         self.ax1.set_ylim(-25, 25)
         self.ax1.set_xlim(-25, 25)
         self.line, = self.ax1.plot(self.xData, self.yData, 'r')
+        serial_port(stopFlag=0)
         self.update_plot()
 
     def update_plot(self):
@@ -94,27 +112,24 @@ class App(Frame):
         self.canvas.draw()
 
     def send_circle(self):
-        # ser.write('c'.encode('ascii'))
-        ser.write(b'\x63')
-        # ser.close()
+        serial_port(stopFlag=1)
+        ser.write('c'.encode())
         plt.cla()
         self.set_up_plot()
 
     def send_square(self):
+        serial_port(stopFlag=1)
         ser.write('s'.encode())
-        print('s'.encode)
         plt.cla()
         self.set_up_plot()
 
     def send_triangle(self):
         ser.write('t'.encode())
-        print('t'.encode())
         plt.cla()
         self.set_up_plot()
 
     def send_line(self):
         ser.write('l'.encode())
-        print('l'.encode())
         plt.cla()
         self.set_up_plot()
 
@@ -126,12 +141,18 @@ ser = serial.Serial(
 )
 ser.close()
 ser.open()
-time.sleep(3)
+
+# while True:
+
+    # keyInput = input('Enter a char: ')
+    # ser.write(keyInput.encode())
+    # print(str(ser.read().decode('utf-8')))
 
 root = Tk()
 
 App(root)
 
 root.mainloop()
+
 
 
