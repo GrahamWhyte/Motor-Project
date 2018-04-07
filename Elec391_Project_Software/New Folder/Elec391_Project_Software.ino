@@ -7,7 +7,7 @@
 #define MIRROR_DIREC_2  A3
 #define MIRROR_DIREC_1  A4
 
-#define LASERSETSIZE  31 
+#define LASERSETSIZE 31
 #define MIRRORSETSIZE 12
 
 #define INTERRUPT_TO_DEG  0.9
@@ -20,18 +20,23 @@
 #define SETPOINT_ARRAY_SIZE 101
 #define TERMINATION_VAL -1000
 
-#define LASER_MOD 0.375
+//Kp Laser Correction
+#define  LASER_MOD 0.375
 
+bool laser_direction;
 
-typedef union{
+union {
   float floatVal; 
-  long longVal; 
-} tits; 
+  byte floatBuf[4]; 
+} floatData; 
+
+union {
+  int intVal; 
+  byte intBuf[2]; 
+} intData; 
 
 //const int LASER_ARRAY_SIZE = 27; 
 //const int MIRROR_ARRAY_SIZE = 1; 
-
-bool laser_direction; 
 
 // Set control frequency 
 int controlTime_us = 1000;                  // PID update time in us 
@@ -57,17 +62,12 @@ char squareSignal = 's';
 char lineSignal = 'l'; 
 
 // Setpoint Arrays
-
-
-// Setpoint Arrays
-//const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {25.2, 21.6, 18, 14.4, 
-//                                                               10.8, 7.2, 3.6, 0, -3.6, -7.2, -10.8, -14.4, -18, -21.6,
-//                                                               -25.2, TERMINATION_VAL}; 
-const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {14.4, 0, -14.4, -25.2, -14.4, 0, TERMINATION_VAL}; 
-
-                                                              
+const double setpoint_laser_line [SETPOINT_ARRAY_SIZE] PROGMEM = {25.2, 21.6, 18, 14.4, 
+                                                               10.8, 7.2, 3.6, 0, -3.6, -7.2, -10.8, -14.4, -18, -21.6,
+                                                               -25.2, TERMINATION_VAL}; 
 const double setpoint_mirror_line [SETPOINT_ARRAY_SIZE] PROGMEM = {61.2, 61.2, 61.2, 61.2,
-                                                                  61.2, 61.2, TERMINATION_VAL};
+                                                                  61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2, 61.2,
+                                                                  61.2, TERMINATION_VAL};
                                                                   
 const double setpoint_laser_circle [SETPOINT_ARRAY_SIZE] PROGMEM = {18,14.4,10.8,7.2,3.6,7.2,10.8,14.4, TERMINATION_VAL}; 
 const double setpoint_mirror_circle [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,46.8,50.4,46.8,43.2,39.6,36,39.6, TERMINATION_VAL};
@@ -85,14 +85,11 @@ const double setpoint_mirror_square [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,
 
 const double setpoint_laser_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {0,3.6,7.2,10.8,7.2,3.6,0,-3.6,-7.2,-10.8,-7.2,-3.6,TERMINATION_VAL}; 
 const double setpoint_mirror_triangle [SETPOINT_ARRAY_SIZE] PROGMEM = {43.2,43.2,43.2,43.2,46.8,50.4,54,50.4,46.8,43.2,43.2,43.2,TERMINATION_VAL};                                                                                                                     
-//const double setpoint_laser_zero [SETPOINT_ARRAY_SIZE] PROGMEM = {0, TERMINATION_VAL}; 
-//const double setpoint_mirror_zero [SETPOINT_ARRAY_SIZE] PROGMEM = {0, TERMINATION_VAL}; 
+const double setpoint_laser_zero [SETPOINT_ARRAY_SIZE] PROGMEM = {0, TERMINATION_VAL}; 
+const double setpoint_mirror_zero [SETPOINT_ARRAY_SIZE] PROGMEM = {0, TERMINATION_VAL}; 
 
-const double setpoint_laser_list[LASERSETSIZE] PROGMEM = {-54,-50.4,-46.8,-43.2,-39.6,-36,-32.4,-28.8,-25.2,-21.6,-18,-14.4,-10.8,-7.2,-3.6,0,3.6,7.2,10.8,14.4,18,21.6,25.2,28.8,32.4,36,39.6,43.2,46.8,50.4,54};
-const double setpoint_mirror_list[MIRRORSETSIZE] PROGMEM = {28.8,32.4,36,39.6,43.2,46.8,50.4,54,57.6,61.2,64.8,68.4};
-
-
-
+const double setpoint_laser_list[LASERSETSIZE] = {-54,-50.4,-46.8,-43.2,-39.6,-36,-32.4,-28.8,-25.2,-21.6,-18,-14.4,-10.8,-7.2,-3.6,0,3.6,7.2,10.8,14.4,18,21.6,25.2,28.8,32.4,36,39.6,43.2,46.8,50.4,54};
+const double setpoint_mirror_list[MIRRORSETSIZE] = {28.8,32.4,36,39.6,43.2,46.8,50.4,54,57.6,61.2,64.8,68.4};
 /*************************
         Laser motor
 **************************/
@@ -115,9 +112,11 @@ double lastTime_laser = 0;
 
 double input_laser = 0, output_laser = 0, setpoint_laser = 0;
 
+
 double kp_laser = 0.8618;
 double ki_laser = 1.0035;
 double kd_laser = 0.19066;
+
 
 /*************************
         Mirror motor
@@ -138,6 +137,7 @@ int displacement_mirror = 0;
 double errorTotal_mirror = 0, lastError_mirror = 0, lastSetpoint_mirror = 0, lastTime_mirror = 0; 
 
 double input_mirror = 0, output_mirror = 0, setpoint_mirror= 0;
+
 
 double kp_mirror = 1.2;
 double ki_mirror = 0.120;
@@ -170,7 +170,7 @@ void setup() {
 
 //
 //  Serial.println("Homing Begin"); 
-  homing(); 
+//  homing(); 
 //  Serial.println("Homing Done"); 
 //  
 
@@ -183,7 +183,7 @@ void setup() {
   Timer1.attachInterrupt(timer_one_ISR);
 
   // Configure Timer 3. The setpoint for both motors will update every time this timer interrupts
-  Timer3.initialize(convert_to_micro_seconds(0.02));             // Enter time in seconds, will be converted 
+  Timer3.initialize(convert_to_micro_seconds(0.05));             // Enter time in seconds, will be converted 
   Timer3.attachInterrupt(update_setpoint);
 
 
@@ -198,7 +198,7 @@ void setup() {
 
   
   // Initially draw a square
-  populate_setpoint_arrays(setpoint_laser_circle, setpoint_mirror_circle); 
+  populate_setpoint_arrays(setpoint_laser_line, setpoint_mirror_line); 
 //  readShape('t'); 
 
   // Wait 500ms for shit to get not fucked
@@ -207,10 +207,10 @@ void setup() {
 }
 
 
-//char recievedChar = 'g'; 
+
 bool commandFlag = false; 
 bool lenFlag = false; 
-bool dataFlag = false;
+bool dataFlag = false; 
 
 int dataIndex = 0; 
 int command; 
@@ -218,18 +218,78 @@ int len;
 byte *data; 
 byte *buff;
 
-volatile double* laser_array; 
-volatile double* mirror_array; 
+double *laser_array; 
+double *mirror_array; 
 
- 
+  
 //char recievedChar = 'g'; 
 void loop() {
- // Make sure at least 3 bytes are available
+  // Make sure at least 3 bytes are available
   if (Serial.available()>0) {
     readShape(); 
   }
 
-//
+//   if (Serial.available()) {
+//      Serial.readBytes(buff, 1); 
+//      if (!commandFlag) {
+//        command = (int)buff[0];
+//        commandFlag = true;
+//      } else if (!lenFlag) {
+//        len = (int)buff[0];
+//        lenFlag = true;
+//      } else if (!dataFlag) {
+//        data[dataIndex] = (byte)buff[0];
+//        dataIndex++;
+//        if (dataIndex >= len) {
+//          dataFlag = true;
+////          Serial.write((byte)command);
+////          Serial.write((byte)len);
+////          for (int i = 0; i < len; i++) {
+////            Serial.write(data[i]);
+////          }
+//        }
+//      } else {
+//        commandFlag = false;
+//        lenFlag = false;
+//        dataFlag = false;
+//        
+//        if (command == 0) {  
+//      
+//        switch (data[0]) {
+//        
+//          case 'c': 
+//            laser_array = setpoint_laser_circle; 
+//            mirror_array = setpoint_mirror_circle; 
+//            break; 
+//      
+//          case 's':
+//            laser_array = setpoint_laser_square; 
+//            mirror_array = setpoint_mirror_square; 
+//            break; 
+//      
+//          case 't':
+//            laser_array = setpoint_laser_triangle; 
+//            mirror_array = setpoint_mirror_triangle; 
+//            break; 
+//      
+//          case 'l':
+//            laser_array = setpoint_laser_line; 
+//            mirror_array = setpoint_mirror_line; 
+//            break;
+//    
+//        // Make sure nothing weird happens if an unexpected signal comes through
+//        default: 
+//          laser_array = setpoint_laser_line; 
+//          mirror_array = setpoint_mirror_line; 
+//          break; 
+//    
+//      }
+//      populate_setpoint_arrays(laser_array, mirror_array); 
+//  }
+//        
+//        dataIndex = 0;
+//      }
+//   }
   
   /*
    * Debugging serial prints 
@@ -268,6 +328,12 @@ void homing() {
   analogWrite(motorPin_mirror, 0);
   displacement_mirror = 0; 
 
+  while(digitalRead(homingPin_laser)) {
+    analogWrite(motorPin_laser, 100);   
+    analogWrite(LASER_DIREC_2, 255);
+    analogWrite(LASER_DIREC_1, 0); 
+  }
+  
   displacement_laser = 0;
 //  analogWrite(motorPin_laser, 0);
 //  Serial.println("Laser Motor Done"); 
@@ -276,14 +342,17 @@ void homing() {
 
 void populate_setpoint_arrays (double *laser_shape, double *mirror_shape) {
 
-  int i; 
-  for (i = 0; i < SETPOINT_ARRAY_SIZE-1; i++) {
+  for (int i = 0; i < SETPOINT_ARRAY_SIZE; i++) {
     setpointArray_laser[i] = pgm_read_float(&laser_shape[i]);
     setpointArray_mirror[i] = pgm_read_float(&mirror_shape[i]);
 
+//    if (setpointArray_laser[i] != TERMINATION_VAL){
+//      Serial.write('m'); 
+//      sendFloat(setpointArray_mirror[i]);  
+//      Serial.write('l');
+//      sendFloat(setpointArray_laser[i]);
+//    }
   }  
-  setpointArray_laser[i] = TERMINATION_VAL; 
-  setpointArray_mirror[i] = TERMINATION_VAL; 
 }
 
 
@@ -308,49 +377,30 @@ void readShape() {
   long newSpeed = 0; 
 
   Serial.readBytes(test, 1); 
-//  Serial.readBytes(test, 3); 
-//  command = test[0]; 
-//  len = test[1]; 
-//  data = test[2]; 
-//  Serial.write(command); 
-//  Serial.write(len); 
-//  Serial.write(data); 
-  
 //  Serial.write(test[0]);
 
   if (!commandFlag) {
     command = test[0]; 
     commandFlag = true;
   }
-  
   else if (!lenFlag) {
     len = test[0];  
     lenFlag = true; 
   }
-  
   else if (!dataFlag) {
     data = test[0]; 
-    dataFlag = true; 
-  }
-//
-//    if (dataIndex < len-1){
-//      data[dataIndex] = test[0]; 
+    dataFlag = true;
+//    if (dataIndex < len) {
+//      data[dataIndex] = test[0];
 //      dataIndex++; 
 //    }
-//    
-//    else{
+//    else {
 //      dataFlag = true; 
-//      Serial.write(command); 
-//      Serial.write(len); 
-//
-//      for (int i=0; i<len-1; i++){
-//        Serial.write(data[i]); 
-//      }
 //    }
-//  }
+  }
 
   if (dataFlag){
-  
+    
     if (command == 0) {  
       
         switch (data) {
@@ -370,20 +420,19 @@ void readShape() {
             mirror_array = setpoint_mirror_triangle; 
             break; 
       
-          case 'L':
+          case 'l':
             laser_array = setpoint_laser_line; 
             mirror_array = setpoint_mirror_line; 
             break;
     
         // Make sure nothing weird happens if an unexpected signal comes through
         default: 
-          laser_array = setpoint_laser_square; 
-          mirror_array = setpoint_mirror_square; 
+          laser_array = setpoint_laser_line; 
+          mirror_array = setpoint_mirror_line; 
           break; 
     
       }
-     
-    populate_setpoint_arrays(laser_array, mirror_array); 
+      populate_setpoint_arrays(laser_array, mirror_array); 
   }
 
   /* Command = 1: Change update speed
@@ -405,21 +454,17 @@ void readShape() {
 //    }
 //  }
 
-  else {
-    laser_array = setpoint_laser_square; 
-    mirror_array = setpoint_mirror_square; 
-    populate_setpoint_arrays(laser_array, mirror_array); 
-  }
-
-  
   // Reset Flags
   commandFlag = false; 
   lenFlag = false; 
   dataFlag = false; 
-//  data = 0; 
-//  command = 0; 
-//  len = 0; 
-
+  dataIndex = 0; 
+  command = 0; 
+  len = 0; 
+  data = 0;
+//  for (int i = 0; i<4; i++){
+//    data[i] = 0; 
+//  }
  }
 
 }
@@ -442,5 +487,4 @@ void sendFloat(double val) {
   byte *bytes = (byte *)&val; 
   Serial.write(bytes, sizeof(val));
 }
-
 

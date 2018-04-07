@@ -6,23 +6,12 @@ void timer_one_ISR() {
 * Updates PID values for both motors at an interval specified by controlTime_us 
 */
 
-
-
-
-
 void update_pid() {
 
 //  digitalWrite(13, LOW); 
   t1Flag = false; 
   
-  double kp = 0;
-    
-  if(laser_direction == 0)
-    kp = kp_laser - LASER_MOD;
-  else
-    kp = kp_laser;
-  
-  output_laser = calculate_PID(kp, ki_laser, kd_laser, input_laser, setpoint_laser, &errorTotal_laser, &lastError_laser, &lastSetpoint_laser, &lastTime_laser);
+  output_laser = calculate_PID(kp_laser, ki_laser, kd_laser, input_laser, setpoint_laser, &errorTotal_laser, &lastError_laser, &lastSetpoint_laser, &lastTime_laser);
   output_mirror = calculate_PID(kp_mirror, ki_mirror, kd_mirror, input_mirror, setpoint_mirror, &errorTotal_mirror, &lastError_mirror, &lastSetpoint_mirror, &lastTime_mirror);
 
   PWM_out(output_laser, motorPin_laser, LASER_DIREC_1, LASER_DIREC_2); 

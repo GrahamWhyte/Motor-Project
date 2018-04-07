@@ -10,29 +10,17 @@ void laser_encoder_ISR_1() {
   // Rising Edge 
   if (digitalRead(encoderPin_laser)){
     if (digitalRead(encoderPin2_laser))
-    {
-      displacement_laser--;
-      laser_direction = 0;
-    }   
+      displacement_laser--;  
     else 
-    {
-      displacement_laser++;
-      laser_direction = 1;
-    }  
+      displacement_laser++; 
   }
 
   // Falling Edge
    if (!digitalRead(encoderPin_laser)){
     if (digitalRead(encoderPin2_laser))
-    {
-      displacement_laser++;
-      laser_direction = 1;
-    }  
+      displacement_laser++; 
     else 
-    {
-      displacement_laser--;
-      laser_direction = 0;
-    }  
+      displacement_laser--; 
   }
 
   // Convert the displacement (in interrupts) to radians
@@ -51,29 +39,17 @@ void laser_encoder_ISR_2() {
   // Rising Edge 
   if (digitalRead(encoderPin2_laser)){
     if (digitalRead(encoderPin_laser))
-    {
-      displacement_laser++;
-      laser_direction = 1;
-    }  
-    else
-    { 
-      displacement_laser--;
-      laser_direction = 0;
-    } 
+      displacement_laser++;  
+    else 
+      displacement_laser--; 
   }
 
   // Falling Edge
    if (!digitalRead(encoderPin2_laser)){
     if (digitalRead(encoderPin_laser))
-    {
-      displacement_laser--;
-      laser_direction = 0;
-    } 
-    else
-    { 
+      displacement_laser--; 
+    else 
       displacement_laser++; 
-      laser_direction = 1;
-    }
   }
 }
 
