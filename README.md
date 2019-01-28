@@ -1,6 +1,8 @@
 ﻿# Motor-Project
 3rd Year UBC Design project. 
 
+Objective: Design a system of two motors to control a laser to draw various shapes fast enough to look like a complete image. The motors must be hand-built and controlled with a PID controller. 
+
 Files are organized as follows:
 
 1. Elec391_Project_Gen_1 -> Initial PCB
